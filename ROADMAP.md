@@ -167,26 +167,27 @@ Deliver a modern desktop application built on PySide6 (Qt 6), window titled **`S
 ### Focus & Objectives
 Implement the multi-format reporting pipeline with data redaction and establish the external plugin hook interface.
 
-- **Status**: `PLANNED`
+- **Status**: `COMPLETED`
 - **Dependencies**: Phase 1 (Foundation), Phase 2 (TUI) or Phase 3 (GUI).
 
 ### Key Milestones & Deliverables
-1. **HTML Executive & Technical Report Generator (`src/sqlphantom/reporting/html.py`)**:
-   - Self-contained, responsive HTML reports with interactive finding filters and charts.
-2. **Markdown Exporter (`src/sqlphantom/reporting/markdown.py`)**:
+1. **Multi-Format Report Generator (`src/sqlphantom/reporting/generator.py`)**:
+   - Self-contained, responsive HTML reports with styled cards and code snippets.
    - Clean GitHub-flavored Markdown for Jira, GitLab, and GitHub issue trackers.
-3. **Machine-Readable JSON Exporter (`src/sqlphantom/reporting/json_export.py`)**:
-   - Structured JSON output adhering to versioned SQLPhantom Report Schema.
-4. **Sensitive Data Redaction Subsystem (`src/sqlphantom/application/redactor.py`)**:
-   - Automated redaction of passwords, authorization tokens, cookies, and PII from reports.
-5. **Plugin Interface & Hook Specifications (`src/sqlphantom/plugins/`)**:
-   - Python `Protocol` interfaces for pre-scan request modifiers and post-finding alerts.
-   - Plugin discovery and safe execution sandboxing with exception trapping.
+   - Machine-readable JSON output adhering to structured finding schemas.
+2. **Sensitive Data Redaction Subsystem (`src/sqlphantom/reporting/generator.py`)**:
+   - Automated regex scrubbing of Bearer tokens, Basic auth credentials, session cookies, passwords, and API keys.
+3. **Session Comparison & Vulnerability Drift (`src/sqlphantom/reporting/generator.py`)**:
+   - `compare_sessions` algorithm calculating new, resolved, and common findings across assessment runs.
+4. **Plugin Contracts & Extension Architecture (`src/sqlphantom/plugins/base.py`)**:
+   - `PluginMetadata`, `BasePlugin`, `ReportExporterPlugin`, and `FindingEnricherPlugin`.
+5. **Plugin Registry & Resilient Sandboxing (`src/sqlphantom/plugins/registry.py`)**:
+   - Discovery, lifecycle management, and exception-isolated execution (`execute_safely`).
 
 ### Acceptance Criteria
-- [ ] HTML, Markdown, and JSON reports pass automated schema and formatting validation.
-- [ ] Redaction filters reliably replace credentials and tokens with `[REDACTED]`.
-- [ ] Sample third-party plugin loads cleanly and triggers alerts without impacting core stability.
+- [x] HTML, Markdown, and JSON reports pass automated schema and formatting validation.
+- [x] Redaction filters reliably replace credentials and tokens with `[REDACTED_*]` placeholders.
+- [x] Sample third-party plugins load cleanly, enrich findings, and fail safely without crashing host application.
 
 ---
 

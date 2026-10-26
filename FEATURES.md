@@ -477,32 +477,32 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Produces client-ready deliverables without manual document editing.
 - **Dependencies**: `jinja2`, [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion), [SEC-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sec-001-credential--header-redaction).
 - **Acceptance Criteria**: Generates self-contained HTML (embedded CSS/JS); includes summary charts, finding tables, and proof-of-concept details.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_html_report.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_reporting.py`
 
 ### REP-002: Markdown Report Generation
 - **Description**: Clean GitHub-flavored Markdown report exporter suitable for ingestion into bug trackers (Jira, GitLab, GitHub Issues).
 - **User Value**: Accelerates engineering handoffs and ticketing workflows.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Valid GFM markdown output; includes collapsible raw payload blocks and structured finding tables.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_markdown_report.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_reporting.py`
 
 ### REP-003: Machine-Readable JSON Export
 - **Description**: Comprehensive JSON export adhering to a versioned SQLPhantom report schema for ingestion into SIEMs and vulnerability management platforms.
 - **User Value**: Supports automated DevSecOps pipelines and corporate vulnerability databases.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Exports valid JSON matching schema; includes targets, scan metadata, findings, and timings.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_json_report.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_reporting.py`
 
 ### REP-004: Sensitive Data Masking in Reports
 - **Description**: Automatic redaction and masking of discovered user credentials, sensitive database fields, and authorization tokens in all generated reports.
 - **User Value**: Prevents compliance violations and credential leaks when sharing reports across teams.
 - **Dependencies**: [SEC-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sec-001-credential--header-redaction), [REP-001](file:///d:/Projects/SQLPhantom/FEATURES.md#rep-001-html-executive--technical-report-export).
 - **Acceptance Criteria**: Masks passwords, tokens, and PII patterns with `[REDACTED]`; operator can toggle masking behavior.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_report_masking.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_reporting.py`
 
 ### REP-005: Custom Report Template Support
 - **Description**: Template engine allowing organizations to supply custom Jinja2 HTML and Markdown templates with corporate branding and logos.
@@ -521,8 +521,8 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables community and enterprise extensions without modifying core source code.
 - **Dependencies**: Python standard library `typing`.
 - **Acceptance Criteria**: Defines hooks for `on_scan_init`, `on_target_probe`, `on_vulnerability_found`, `on_scan_complete`.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_plugin_hooks.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_plugins.py`
 
 ### PLUG-002: Pre-Scan Request Modifier Hook
 - **Description**: Plugin hook enabling programmatic modification of target requests before engine dispatch (e.g. signing requests with HMAC or AWS SigV4).
@@ -545,8 +545,8 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Keeps the core application resilient against third-party plugin bugs.
 - **Dependencies**: [PLUG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#plug-001-plugin-interface--hook-specifications).
 - **Acceptance Criteria**: Catches and logs plugin exceptions without crashing UI or scan jobs; displays loaded plugins in settings.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_plugin_discovery.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/unit/test_plugins.py`
 
 ---
 
