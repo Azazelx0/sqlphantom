@@ -15,6 +15,8 @@ sqlmap_dir = root_dir / "sqlmap"
 
 datas = [
     (str(sqlmap_dir), "sqlmap"),
+    (str(root_dir / "assets"), "assets"),
+    (str(src_dir / "sqlphantom" / "assets"), "sqlphantom/assets"),
 ]
 
 hiddenimports = [
@@ -59,6 +61,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="sqlphantom",
+    icon=str(root_dir / "assets" / "logo.png"),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

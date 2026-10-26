@@ -115,6 +115,16 @@ class AssessmentWizardScreen(QWidget):
         row3.addLayout(v_delay)
         form_layout.addLayout(row3)
 
+        # Tamper Scripts
+        row4 = QHBoxLayout()
+        v_tamper = QVBoxLayout()
+        v_tamper.addWidget(QLabel("Tamper Scripts (comma-separated, e.g. space2comment, between, charencode):"))
+        self.input_tamper = QLineEdit()
+        self.input_tamper.setPlaceholderText("space2comment, between, charencode, randomcase")
+        v_tamper.addWidget(self.input_tamper)
+        row4.addLayout(v_tamper)
+        form_layout.addLayout(row4)
+
         # Boundary Safeguard Checkbox
         self.chk_private_ips = QCheckBox("Block RFC 1918 / Loopback Private IP addresses (Recommended)")
         self.chk_private_ips.setChecked(True)
@@ -188,6 +198,8 @@ class AssessmentWizardScreen(QWidget):
 
         proxy_val = self.input_proxy.text().strip() or None
         delay_val = self.spin_delay.value()
+        tamper_str = self.input_tamper.text().strip()
+        tamper_list = [t.strip() for t in tamper_str.split(",") if t.strip()]
 
         config = AssessmentConfig(
             target=target,
@@ -196,6 +208,7 @@ class AssessmentWizardScreen(QWidget):
             risk=risk,
             proxy=proxy_val,
             delay=delay_val,
+            tamper_scripts=tamper_list,
         )
 
         try:

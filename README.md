@@ -1,11 +1,15 @@
+<p align="center">
+  <img src="assets/logo.png" width="260" alt="SQLPhantom Logo" />
+</p>
+
 # SQLPhantom — A Modern GUI for sqlmap
 
 > **sqlmap, reimagined.**
 
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
-[![Version](https://img.shields.io/badge/version-0.1.0--dev-orange.svg)](file:///d:/Projects/SQLPhantom/CHANGELOG.md)
-[![Status](https://img.shields.io/badge/status-Phase%201%20Foundation-yellow.svg)](file:///d:/Projects/SQLPhantom/ROADMAP.md)
+[![Version](https://img.shields.io/badge/version-0.4.0--beta-orange.svg)](file:///d:/Projects/SQLPhantom/CHANGELOG.md)
+[![Status](https://img.shields.io/badge/tests-53%20passed-brightgreen.svg)](file:///d:/Projects/SQLPhantom/ROADMAP.md)
 [![Upstream](https://img.shields.io/badge/upstream-sqlmap%20v1.10.10%20(6e06114)-green.svg)](https://github.com/sqlmapproject/sqlmap)
 
 SQLPhantom is an open-source, modernized desktop and terminal application built around the industry-standard [sqlmap](https://sqlmap.org) engine. It provides an intuitive PySide6 desktop graphical interface (**SQLPhantom — sqlmap Enhanced**), a powerful Textual terminal user interface (TUI) for remote operators, and a unified CLI, all backed by persistent SQLite session management and strict testing guardrails.

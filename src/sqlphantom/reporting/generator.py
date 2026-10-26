@@ -5,6 +5,7 @@ evidence normalization, and session comparison.
 
 from datetime import datetime, timezone
 import json
+from pathlib import Path
 import re
 from typing import Any
 
@@ -176,6 +177,20 @@ class ReportGenerator:
         return "\n".join(lines)
 
     def _to_html(self, title: str, findings: list[Finding]) -> str:
+        logo_b64 = ""
+        logo_file = Path("assets/logo.png")
+        if not logo_file.exists():
+            logo_file = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
+        if logo_file.exists():
+            import base64
+            logo_b64 = base64.b64encode(logo_file.read_bytes()).decode("utf-8")
+
+        logo_img_tag = (
+            f'<img src="data:image/png;base64,{logo_b64}" width="54" height="54" alt="SQLPhantom" style="border-radius: 6px;" />'
+            if logo_b64
+            else ""
+        )
+
         rows = ""
         for f in findings:
             rows += f"""
@@ -201,7 +216,8 @@ class ReportGenerator:
     <title>{title}</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0B0F19; color: #F8FAFC; padding: 2.5rem; }}
-        h1 {{ color: #A855F7; margin-bottom: 0.5rem; }}
+        h1 {{ color: #A855F7; margin: 0; }}
+        .header {{ display: flex; align-items: center; gap: 16px; margin-bottom: 2rem; border-bottom: 1px solid #334155; padding-bottom: 1.5rem; }}
         .card {{ background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }}
         .tags {{ margin-bottom: 1rem; }}
         .badge {{ background: #334155; color: #F8FAFC; padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-right: 6px; font-weight: bold; }}
@@ -212,8 +228,13 @@ class ReportGenerator:
     </style>
 </head>
 <body>
-    <h1>{title}</h1>
-    <p style="color: #94A3B8;">Generated: {_utc_now().strftime('%Y-%m-%d %H:%M:%S UTC')} | Total Findings: {len(findings)}</p>
+    <div class="header">
+        {logo_img_tag}
+        <div>
+            <h1>{title}</h1>
+            <p style="margin: 4px 0 0 0; color: #94A3B8;">Generated: {_utc_now().strftime('%Y-%m-%d %H:%M:%S UTC')} | Total Findings: {len(findings)}</p>
+        </div>
+    </div>
     {rows if findings else "<p>No vulnerabilities identified.</p>"}
 </body>
 </html>"""

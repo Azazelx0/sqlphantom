@@ -1,7 +1,10 @@
 """
-SQLPhantom PySide6 About dialog.
+SQLPhantom PySide6 About dialog with brand logo and upstream attribution.
 """
 
+from pathlib import Path
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
 from sqlphantom import (
@@ -17,27 +20,50 @@ from sqlphantom import (
 
 class AboutDialog(QDialog):
     """
-    About dialog presenting project identity, upstream sqlmap attribution,
+    About dialog presenting project identity, brand logo, upstream sqlmap attribution,
     and open-source licensing.
     """
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("About SQLPhantom")
-        self.setFixedSize(520, 360)
+        self.setFixedSize(560, 420)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(14)
 
+        # Header with Logo
+        header_layout = QHBoxLayout()
+        header_layout.setSpacing(16)
+
+        logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
+        if not logo_path.exists():
+            logo_path = Path("assets/logo.png")
+
+        if logo_path.exists():
+            lbl_logo = QLabel()
+            pixmap = QPixmap(str(logo_path)).scaled(
+                96, 96, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
+            )
+            lbl_logo.setPixmap(pixmap)
+            header_layout.addWidget(lbl_logo)
+
+        header_text = QVBoxLayout()
         title_lbl = QLabel(f"{__product__} v{__version__}")
-        title_lbl.setStyleSheet("font-size: 20px; font-weight: bold; color: #A855F7;")
+        title_lbl.setStyleSheet("font-size: 22px; font-weight: bold; color: #A855F7;")
         tagline_lbl = QLabel(f"<b>{__tagline__}</b>")
         tagline_lbl.setStyleSheet("font-size: 14px; color: #F8FAFC;")
+        header_text.addWidget(title_lbl)
+        header_text.addWidget(tagline_lbl)
+        header_layout.addLayout(header_text)
+        header_layout.addStretch()
+
+        layout.addLayout(header_layout)
 
         desc_lbl = QLabel(
-            "SQLPhantom is an enhanced fork of sqlmap featuring a PySide6 GUI, "
-            "Textual TUI, and an improved security testing workflow."
+            "SQLPhantom is an enhanced, open-source modernization of sqlmap featuring a PySide6 GUI, "
+            "Textual TUI, structured findings, database schema explorer, and a robust application architecture."
         )
         desc_lbl.setWordWrap(True)
         desc_lbl.setStyleSheet("color: #CBD5E1; line-height: 1.4;")
@@ -59,8 +85,6 @@ class AboutDialog(QDialog):
         btn_close.clicked.connect(self.accept)
         btn_box.addWidget(btn_close)
 
-        layout.addWidget(title_lbl)
-        layout.addWidget(tagline_lbl)
         layout.addWidget(desc_lbl)
         layout.addWidget(attribution_lbl)
         layout.addStretch()
