@@ -61,7 +61,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="sqlphantom",
-    icon=str(root_dir / "assets" / "logo.png"),
+    icon=str(root_dir / "assets" / "logo.ico"),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
