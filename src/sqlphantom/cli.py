@@ -82,10 +82,10 @@ def gui() -> int:
 
 def tui() -> int:
     """Launch the Textual interactive terminal interface."""
-    print(banner())
-    print("[*] Launching SQLPhantom Textual Interactive Terminal...")
-    print("[!] Terminal UI workstation is under active development (Roadmap Phase 2).")
-    print("[*] Core domain, scope enforcement, and engine services are fully operational.")
+    from sqlphantom.tui.app import SQLPhantomApp
+
+    app = SQLPhantomApp()
+    app.run()
     return 0
 
 

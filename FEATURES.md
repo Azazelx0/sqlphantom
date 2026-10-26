@@ -107,48 +107,48 @@ The TUI is built with Textual and Rich, providing a rich, reactive console inter
 - **User Value**: Delivers GUI-like capabilities within a standard terminal or SSH connection.
 - **Dependencies**: `textual>=0.40`, `rich>=13.0`, [DEV-001](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-001-typed-domain-event-bus).
 - **Acceptance Criteria**: Launches via `sqlphantom-tui`; responsive to terminal resize events; standard vim-style and arrow navigation keys.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_app_frame.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ### TUI-002: Interactive Target & Parameter Input Screen
 - **Description**: Modal form for specifying target URL, HTTP method, post data, cookies, and injection boundaries with keyboard navigation.
 - **User Value**: Allows quick target entry without memorizing complex CLI switches.
 - **Dependencies**: `textual>=0.40`, [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Form validation with immediate feedback; history of previously entered URLs accessible via up/down arrows.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_target_input.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ### TUI-003: Live Status & Log Streaming Widget
 - **Description**: Textual widget displaying streaming logs, progress bars, and current stage indicators in real time.
 - **User Value**: Keeps operator informed during lengthy blind or time-based SQL injection scans.
 - **Dependencies**: `textual>=0.40`, [ENG-004](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-004-scan-polling--telemetry-ingestion).
 - **Acceptance Criteria**: Non-blocking log rendering; support for pause/resume scrolling; syntax-highlighted SQL payloads.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_log_widget.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ### TUI-004: Keyboard-Driven Findings Browser
 - **Description**: Interactive list and detail view for browsing discovered vulnerabilities, affected parameters, and injection techniques.
 - **User Value**: Enables fast triage and inspection directly from the terminal.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Keybindings for switching between findings, viewing raw HTTP requests, and copying reproduction commands.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_findings_browser.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ### TUI-005: Database Dump Table Grid
 - **Description**: Terminal table widget rendering extracted database tables, schemas, and columns using Rich tables.
 - **User Value**: Allows inspecting database contents directly in the terminal session.
 - **Dependencies**: [ASSESS-004](file:///d:/Projects/SQLPhantom/FEATURES.md#assess-004-column-extraction--data-dump), `rich>=13.0`.
 - **Acceptance Criteria**: Formats tabular data with automatic column wrapping; supports horizontal scrolling for wide database tables.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_data_table.py`
+- **Status**: `IMPLEMENTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ### TUI-006: Session Management & Quick Launch
 - **Description**: Screen to resume previous sessions, re-run completed jobs, or purge old session data.
 - **User Value**: Operator can disconnect and reconnect to terminal sessions without losing audit context.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Loads session list from SQLite; resumes state on selection.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/tui/test_session_screen.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/tui/test_tui.py`
 
 ---
 

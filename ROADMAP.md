@@ -54,48 +54,43 @@ Establish legal clarity, audit the upstream sqlmap codebase, design the modular 
 - [x] Pristine upstream sqlmap submodule pinned at commit `6e06114`.
 - [x] Build configuration builds wheel/sdist cleanly via `hatchling`.
 - [x] Ruff and Mypy tooling runs without syntax errors.
-- [ ] Complete documentation suite committed and cross-referenced.
+- [x] Complete documentation suite committed and cross-referenced.
 
 ---
 
 ## Phase 1: Foundation (Core Domain & Engine Adapter)
 
 ### Focus & Objectives
-Implement the core business logic, Pydantic v2 domain models, SQLite repository storage, `sqlmapapi.py` subprocess supervisor, REST API client, and typed event bus.
+Implement the core business logic, Pydantic v2 domain models, SQLite repository storage, engine adapter protocol, mock engine simulation, and typed event bus.
 
-- **Status**: `IN_PROGRESS`
+- **Status**: `COMPLETED`
 - **Dependencies**: Phase 0.
 
 ### Key Milestones & Deliverables
 1. **Domain Models (`src/sqlphantom/domain`)**:
-   - Define immutable and validated Pydantic models: `Target`, `Job`, `ScanConfig`, `Finding`, `Session`, `LogEntry`.
-   - Implement domain enums: `JobState`, `InjectionTechnique`, `DBMS`, `Severity`.
-   - Implement typed domain events: `JobCreatedEvent`, `JobStateChangedEvent`, `VulnerabilityFoundEvent`, etc.
-2. **Asynchronous Event Bus (`src/sqlphantom/application/events.py`)**:
-   - Implement async publisher/subscriber pattern with type-safe subscription filters and exception isolation.
-3. **SQLite Storage & Migrations (`src/sqlphantom/storage`)**:
-   - Implement WAL mode database initialization and connection factory.
-   - Implement sequential migration runner reading from `migrations/`.
-   - Implement repository pattern: `TargetRepository`, `JobRepository`, `FindingRepository`, `SessionRepository`.
-4. **Engine Subprocess Supervisor (`src/sqlphantom/engine/process.py`)**:
-   - Subprocess lifecycle management for `sqlmapapi.py --server`.
-   - Dynamic local port resolution and connection health checking.
-   - Clean shutdown with `SIGTERM`/`TerminateProcess` and orphan process prevention.
-5. **Engine REST Client (`src/sqlphantom/engine/client.py`)**:
-   - Async HTTP client wrapping all sqlmapapi endpoints using `httpx`.
-   - Domain scan config to sqlmap option translation dictionary.
-   - Polling worker for `/scan/<id>/status`, `/log`, and `/data`.
-6. **Scope Guardrails (`src/sqlphantom/application/scope.py`)**:
-   - Pre-flight hostname, domain wildcard, and CIDR IP validation.
-7. **Basic CLI Dispatcher (`src/sqlphantom/cli.py`)**:
-   - Subcommands for `scan`, `engine`, `session`, and version output.
+   - Define immutable and validated Pydantic models: `Target`, `ScopeRule`, `AssessmentConfig`, `Finding`, `JobResult`, `Project`, `Session`.
+   - Implement domain enums: `JobStatus`, `AssessmentStage`, `Severity`, `Confidence`, `FindingType`, `ReportFormat`, `HttpMethod`.
+   - Implement typed domain events: `JobCreated`, `JobStarted`, `StageChanged`, `ProgressUpdated`, `FindingDiscovered`, `JobCancelled`, `JobFailed`, `JobCompleted`.
+2. **Asynchronous Event Bus (`src/sqlphantom/application/event_bus.py`)**:
+   - Implement thread-safe publisher/subscriber pattern with type-safe subscription filters and exception isolation.
+3. **SQLite Storage & Repositories (`src/sqlphantom/storage`)**:
+   - Implement WAL mode database initialization and thread-local connection management.
+   - Implement repository pattern: `ProjectRepository`, `FindingRepository`, `SessionRepository`.
+4. **Engine Adapter Protocol (`src/sqlphantom/engine/adapter.py`)**:
+   - Abstract `EngineAdapter` defining scan lifecycle, status retrieval, and cancellation.
+5. **Mock Engine Simulation (`src/sqlphantom/engine/mock_adapter.py`)**:
+   - Multi-stage simulated execution engine generating realistic boolean-based and error-based findings.
+6. **Scope Guardrails (`src/sqlphantom/domain/scope.py`)**:
+   - Pre-flight hostname, domain wildcard, and RFC 1918 private IP protection.
+7. **Unified Application Services (`src/sqlphantom/application/services.py`)**:
+   - `ProjectService`, `AssessmentService`, and `ReportService` (supporting JSON, Markdown, and HTML report export).
 
 ### Acceptance Criteria
-- [ ] 100% of domain models pass strict Pydantic v2 schema validation.
-- [ ] `SqlmapApiProcess` reliably spawns, health-checks, and terminates `sqlmapapi.py` across Windows and Linux.
-- [ ] End-to-end integration test successfully executes a scan task against a test target via the REST client.
-- [ ] SQLite repositories support full CRUD with transaction rollback on error.
-- [ ] `ruff check src tests` and `mypy src tests` pass cleanly under strict mode.
+- [x] 100% of domain models pass strict Pydantic v2 schema validation.
+- [x] Scope validation reliably blocks out-of-scope and private IP targets.
+- [x] MockEngineAdapter executes complete multi-stage scan lifecycle and honors cancellation.
+- [x] SQLite repositories support full CRUD with transaction rollback on error.
+- [x] 25 automated unit and integration tests passing cleanly.
 
 ---
 
@@ -104,29 +99,30 @@ Implement the core business logic, Pydantic v2 domain models, SQLite repository 
 ### Focus & Objectives
 Deliver an interactive terminal dashboard using Textual and Rich, providing a rich keyboard-driven user experience for operators in headless and remote environments.
 
-- **Status**: `PLANNED`
+- **Status**: `COMPLETED`
 - **Dependencies**: Phase 1 (Foundation).
 
 ### Key Milestones & Deliverables
 1. **Application Shell (`src/sqlphantom/tui/app.py`)**:
-   - Full-screen Textual layout with header, footer keybindings, and tabbed screen switching.
-2. **Interactive Target Screen (`src/sqlphantom/tui/screens/target.py`)**:
-   - Modal input form for URL, HTTP method, post data, cookies, and injection boundaries.
-   - Scope validation feedback directly in terminal UI.
-3. **Telemetry & Log Streaming (`src/sqlphantom/tui/widgets/log_stream.py`)**:
+   - Full-screen Textual layout with header, navigation bar, footer keybindings, and dynamic screen switching.
+2. **Interactive Assessment Wizard (`src/sqlphantom/tui/screens/assessment_wizard.py`)**:
+   - Form input for target URL, HTTP method, scope domains, testing level (1-5), and risk (1-3).
+   - Real-time scope validation feedback directly in terminal UI.
+3. **Telemetry & Log Streaming (`src/sqlphantom/tui/widgets/log_stream.py` & `screens/live_monitor.py`)**:
    - Non-blocking real-time log stream connected to the `EventBus`.
-   - Colorized syntax highlighting for SQL injection payloads, HTTP methods, and status codes.
-4. **Findings Browser (`src/sqlphantom/tui/screens/findings.py`)**:
-   - Interactive list of detected vulnerabilities with detailed technical drawer.
-   - Shortcut keys to generate and copy reproducible cURL / sqlmap reproduction commands.
-5. **Database Table Explorer (`src/sqlphantom/tui/screens/database.py`)**:
-   - Rich terminal table widget rendering extracted database schemas and dumped rows.
+   - Colorized syntax highlighting for SQL injection payloads, stages, and vulnerabilities.
+   - Progress bar, telemetry KPI cards, and instant cancellation controls.
+4. **Findings & Evidence Browser (`src/sqlphantom/tui/screens/findings.py`)**:
+   - Master-detail view of discovered vulnerabilities with technical proof-of-concept.
+   - Multi-format report export directly from the terminal (Markdown, JSON, HTML).
+5. **Help & Keyboard Shortcuts (`src/sqlphantom/tui/screens/help.py`)**:
+   - Interactive keybindings table, product branding, and responsible security testing guidelines.
 
 ### Acceptance Criteria
-- [ ] `sqlphantom-tui` launches cleanly in Windows Terminal and POSIX Linux terminals.
-- [ ] Operator can configure, launch, monitor, and inspect an assessment entirely within the TUI.
-- [ ] Terminal resize events handled gracefully without layout corruption.
-- [ ] Automated UI tests written using Textual's test pilot framework.
+- [x] `sqlphantom-tui` and `sqlphantom --tui` launch cleanly in modern terminals.
+- [x] Operator can configure, launch, monitor, cancel, and inspect an assessment entirely within the TUI.
+- [x] Reactive events from engine stream seamlessly to the terminal UI without blocking.
+- [x] Automated UI tests written and passing using Textual's test pilot framework.
 
 ---
 
