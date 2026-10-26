@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
 
         self.active_job_id: str | None = None
         self._nav_buttons: dict[str, QPushButton] = {}
+        self.current_theme: str = "dark"
 
         # Default Workspace Seed
         self._seed_default_workspace()
@@ -129,6 +130,11 @@ class MainWindow(QMainWindow):
             side_layout.addWidget(btn)
 
         side_layout.addStretch()
+
+        btn_theme = QPushButton("  🌓 Toggle Theme")
+        btn_theme.setProperty("class", "nav-button")
+        btn_theme.clicked.connect(self.toggle_theme)
+        side_layout.addWidget(btn_theme)
 
         btn_about = QPushButton("  About SQLPhantom")
         btn_about.setProperty("class", "nav-button")
@@ -190,3 +196,8 @@ class MainWindow(QMainWindow):
     def show_about_dialog(self) -> None:
         dialog = AboutDialog(self)
         dialog.exec()
+
+    def toggle_theme(self) -> None:
+        self.current_theme = "light" if self.current_theme == "dark" else "dark"
+        from sqlphantom.gui.theme import get_theme_stylesheet
+        self.setStyleSheet(get_theme_stylesheet(self.current_theme))

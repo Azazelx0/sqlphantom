@@ -62,12 +62,20 @@ class AssessmentWizardScreen(QWidget):
         row1.addLayout(v_method)
 
         v_scope = QVBoxLayout()
-        v_scope.addWidget(QLabel("Allowed Domains Scope (comma-separated):"))
+        v_scope.addWidget(QLabel("Allowed Domains Scope:"))
+        row_scope = QHBoxLayout()
         self.input_domains = QLineEdit("vulnweb.com")
         self.input_domains.setPlaceholderText("example.com, api.internal")
-        v_scope.addWidget(self.input_domains)
+        self.btn_adv_scope = QPushButton("Advanced Scope...")
+        self.btn_adv_scope.setProperty("class", "secondary")
+        self.btn_adv_scope.clicked.connect(self._open_scope_dialog)
+        row_scope.addWidget(self.input_domains)
+        row_scope.addWidget(self.btn_adv_scope)
+        v_scope.addLayout(row_scope)
         row1.addLayout(v_scope)
         form_layout.addLayout(row1)
+
+        self._custom_scope = None
 
         # Level & Risk
         row2 = QHBoxLayout()
@@ -134,6 +142,20 @@ class AssessmentWizardScreen(QWidget):
         layout.addWidget(form_frame)
         layout.addStretch()
 
+    def _open_scope_dialog(self) -> None:
+        from sqlphantom.gui.screens.scope_dialog import ScopeConfigDialog
+        domains_str = self.input_domains.text().strip()
+        allowed_domains = [d.strip() for d in domains_str.split(",") if d.strip()]
+        current = self._custom_scope or ScopeRule(
+            allowed_domains=allowed_domains,
+            block_private_ips=self.chk_private_ips.isChecked(),
+        )
+        dialog = ScopeConfigDialog(current, self)
+        if dialog.exec():
+            self._custom_scope = dialog.get_scope_rule()
+            self.input_domains.setText(", ".join(self._custom_scope.allowed_domains))
+            self.chk_private_ips.setChecked(self._custom_scope.block_private_ips)
+
     def launch_assessment(self) -> None:
         self.lbl_error.setText("")
         url = self.input_url.text().strip()
@@ -149,7 +171,14 @@ class AssessmentWizardScreen(QWidget):
 
         method = HttpMethod(method_str)
         allowed_domains = [d.strip() for d in domains_str.split(",") if d.strip()]
-        scope = ScopeRule(allowed_domains=allowed_domains, block_private_ips=block_private)
+
+        if self._custom_scope:
+            scope = self._custom_scope
+            scope.allowed_domains = allowed_domains
+            scope.block_private_ips = block_private
+        else:
+            scope = ScopeRule(allowed_domains=allowed_domains, block_private_ips=block_private)
+
         target = Target(url=url, method=method)
 
         in_scope, reason = validate_target_in_scope(target, scope)
