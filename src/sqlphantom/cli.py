@@ -73,11 +73,9 @@ def main(args: list[str] | None = None) -> int:
 
 def gui() -> int:
     """Launch the PySide6 desktop graphical interface."""
-    print(banner())
-    print("[*] Launching SQLPhantom PySide6 Desktop GUI...")
-    print("[!] Desktop GUI workstation is under active development (Roadmap Phase 3).")
-    print("[*] Core domain, scope enforcement, and engine services are fully operational.")
-    return 0
+    from sqlphantom.gui.app import run_gui_app
+
+    return run_gui_app()
 
 
 def tui() -> int:

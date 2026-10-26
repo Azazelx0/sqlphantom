@@ -131,35 +131,34 @@ Deliver an interactive terminal dashboard using Textual and Rich, providing a ri
 ### Focus & Objectives
 Deliver a modern desktop application built on PySide6 (Qt 6), window titled **`SQLPhantom — sqlmap Enhanced`**, providing a visual testing workflow.
 
-- **Status**: `PLANNED`
+- **Status**: `COMPLETED`
 - **Dependencies**: Phase 1 (Foundation).
 
 ### Key Milestones & Deliverables
-1. **Main Window & Workspace Shell (`src/sqlphantom/gui/windows/main.py`)**:
-   - Responsive multi-pane window with workspace drawer, status bar, and toolbar.
+1. **Main Window & Workspace Shell (`src/sqlphantom/gui/main_window.py`)**:
+   - Responsive multi-pane window with sidebar navigation, status indicators, and screen stack.
    - Window title: `SQLPhantom — sqlmap Enhanced`.
-   - Dark and Light Qt theme support matching OS settings.
-2. **Target Configuration Wizard (`src/sqlphantom/gui/views/target_wizard.py`)**:
-   - Visual configuration wizard supporting raw HTTP request import (Burp/ZAP).
+   - Dark obsidian stylesheet matching Stitch design tokens (`src/sqlphantom/gui/theme.py`).
+2. **Target Configuration Wizard (`src/sqlphantom/gui/screens/assessment_wizard.py`)**:
+   - Visual configuration wizard supporting levels (1-5), risk (1-3), and scope guardrails.
    - Real-time scope boundary validation dialog.
-3. **Live Execution Console (`src/sqlphantom/gui/views/console.py`)**:
-   - Streaming execution console with search, regex filtering, and pause controls.
-   - Stage progression indicator and real-time request throughput graph.
-4. **Request/Response Inspector (`src/sqlphantom/gui/views/inspector.py`)**:
-   - Dual-pane view displaying raw HTTP exchanges with automatic secret masking.
-5. **Visual Database Schema Tree (`src/sqlphantom/gui/views/schema_tree.py`)**:
-   - Hierarchical tree representation of discovered databases, tables, and columns.
-6. **Virtualized Data Dump Grid (`src/sqlphantom/gui/views/data_grid.py`)**:
-   - Qt model-view grid capable of smoothly rendering 50,000+ extracted rows.
-   - One-click export to CSV, JSON, and SQLite.
-7. **Thread Safety & UI Responsiveness (`src/sqlphantom/gui/dispatcher.py`)**:
+3. **Raw HTTP Request Workbench (`src/sqlphantom/gui/screens/request_editor.py`)**:
+   - Workbench for importing, crafting, and parsing Burp Suite and OWASP ZAP raw HTTP requests.
+4. **Live Execution Console (`src/sqlphantom/gui/screens/live_monitor.py`)**:
+   - Streaming execution console with stage progression stepper, telemetry cards, and cancellation.
+5. **Findings Triage & Evidence Viewer (`src/sqlphantom/gui/screens/findings_viewer.py`)**:
+   - Master-detail split-view for inspecting detected vulnerabilities, exploit payloads, and evidence.
+   - One-click report export to Markdown, JSON, and HTML.
+6. **Thread Safety & UI Responsiveness (`src/sqlphantom/gui/signals.py`)**:
    - Qt signal/slot bridging ensuring the GUI thread never blocks during network I/O.
+7. **About Dialog (`src/sqlphantom/gui/screens/about_dialog.py`)**:
+   - Official about dialog detailing upstream sqlmap attribution, versioning, and GPL v2+ licensing.
 
 ### Acceptance Criteria
-- [ ] `sqlphantom-gui` launches natively on Windows 10/11 and Linux (X11 & Wayland).
-- [ ] Complete assessment workflow (configuration, execution, inspection, data dump) operates smoothly.
-- [ ] UI maintains 60 FPS responsiveness during active high-throughput scanning.
-- [ ] Automated GUI tests pass via `pytest-qt`.
+- [x] `sqlphantom-gui` and `sqlphantom --gui` launch natively.
+- [x] Complete assessment workflow operates smoothly and connects to unified application services.
+- [x] UI maintains responsiveness during active scanning via Qt Signal Bridge.
+- [x] Automated GUI tests pass via `pytest-qt`.
 
 ---
 

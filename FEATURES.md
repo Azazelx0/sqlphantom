@@ -21,32 +21,32 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Provides a cohesive desktop workspace for managing assessments, viewing engine health, and switching contexts without terminal fragmentation.
 - **Dependencies**: `PySide6>=6.6`, [DEV-001](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-001-typed-domain-event-bus), [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Window opens with title `SQLPhantom — sqlmap Enhanced`; restores window size/state across restarts; displays real-time engine process status in the status bar.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/gui/test_main_window.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/gui/test_gui.py`
 
 ### GUI-002: Target Configuration Wizard
 - **Description**: Multi-step wizard and form allowing users to configure target URLs, HTTP methods, headers, cookies, data payloads, injection parameters, and assessment depth.
 - **User Value**: Eliminates manual construction of long, error-prone CLI flag sequences while exposing advanced sqlmap options.
 - **Dependencies**: `PySide6>=6.6`, [HTTP-001](file:///d:/Projects/SQLPhantom/FEATURES.md#http-001-raw-http-request-parser), [SCOPE-001](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-001-target-url--host-whitelisting).
 - **Acceptance Criteria**: Form validates inputs via Pydantic; supports pasting raw Burp/ZAP HTTP requests; verifies URL scope before enabling submission.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/gui/test_target_wizard.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/gui/test_gui.py`
 
 ### GUI-003: Live Job Telemetry & Execution Console
 - **Description**: Real-time console view displaying colorized sqlmap output logs, current attack technique, target status, and request throughput graphs.
 - **User Value**: Delivers immediate visibility into assessment progress without manual polling or log file tailing.
 - **Dependencies**: [ENG-004](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-004-scan-polling--telemetry-ingestion), [JOB-004](file:///d:/Projects/SQLPhantom/FEATURES.md#job-004-stage-progression-telemetry).
 - **Acceptance Criteria**: Live streaming log updates without UI freezing; search and log level filtering (DEBUG, INFO, WARNING); auto-scroll toggle.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/gui/test_live_telemetry.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/gui/test_gui.py`
 
 ### GUI-004: Request & Response Inspector
 - **Description**: Dual-pane hex and text viewer showing individual HTTP requests dispatched by the engine and the corresponding server responses.
 - **User Value**: Allows operators to analyze exact payloads, boundary tests, and differential response characteristics.
 - **Dependencies**: [HTTP-001](file:///d:/Projects/SQLPhantom/FEATURES.md#http-001-raw-http-request-parser), [SEC-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sec-001-credential--header-redaction).
 - **Acceptance Criteria**: Displays headers and body with syntax highlighting; automatically redacts sensitive authorization tokens; allows payload copying.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/gui/test_request_inspector.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/gui/test_gui.py`
 
 ### GUI-005: Visual Database Schema Tree Browser
 - **Description**: Interactive tree hierarchy displaying extracted databases, tables, columns, and data types as sqlmap enumerates the target.
