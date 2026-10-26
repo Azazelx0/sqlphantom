@@ -2,6 +2,7 @@
 SQLPhantom TUI Live Assessment Monitoring screen.
 """
 
+from typing import Any
 from rich.text import Text
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
@@ -79,8 +80,9 @@ class LiveMonitorScreen(Static):
             log.log_info("Workstation ready. Launch an assessment to observe live payloads.")
             return
 
-        status = self.app.assessment_service.get_status(job_id)
-        context = self.app.job_manager.get_context(job_id)
+        app: Any = self.app
+        status = app.assessment_service.get_status(job_id)
+        context = app.job_manager.get_context(job_id)
         target_url = context.config.target.url if context else "Unknown Target"
 
         self.query_one("#mon-target-label", Label).update(f"Target: {target_url}")
@@ -118,9 +120,10 @@ class LiveMonitorScreen(Static):
         log.log_vuln(event.title, event.parameter)
 
         # Update findings count
-        job_id = getattr(self.app, "active_job_id", None)
+        app: Any = self.app
+        job_id = getattr(app, "active_job_id", None)
         if job_id:
-            count = len(self.app.assessment_service.get_findings(job_id))
+            count = len(app.assessment_service.get_findings(job_id))
             self.query_one("#kpi-mon-findings", KPICard).update_value(str(count))
             self.query_one("#kpi-mon-dbms", KPICard).update_value("PostgreSQL")
 
@@ -150,9 +153,10 @@ class LiveMonitorScreen(Static):
         log.log_info(f"[red]Job execution failed: {event.error}[/red]")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        app: Any = self.app
         if event.button.id == "btn-cancel-scan":
-            job_id = getattr(self.app, "active_job_id", None)
+            job_id = getattr(app, "active_job_id", None)
             if job_id:
-                self.app.assessment_service.cancel_assessment(job_id)
+                app.assessment_service.cancel_assessment(job_id)
         elif event.button.id == "btn-view-findings":
-            self.app.switch_screen("findings")
+            app.switch_screen("findings")

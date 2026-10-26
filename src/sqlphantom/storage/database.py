@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from pathlib import Path
 import sqlite3
 import threading
+from typing import Any, cast
 
 
 class DatabaseManager:
@@ -116,18 +117,18 @@ class DatabaseManager:
             except Exception:
                 pass
 
-    def execute(self, query: str, params: tuple | dict = ()) -> sqlite3.Cursor:
+    def execute(self, query: str, params: tuple[Any, ...] | dict[str, Any] = ()) -> sqlite3.Cursor:
         """Execute a query within a transactional connection."""
         with self.get_connection() as conn:
             return conn.execute(query, params)
 
-    def fetchone(self, query: str, params: tuple | dict = ()) -> sqlite3.Row | None:
+    def fetchone(self, query: str, params: tuple[Any, ...] | dict[str, Any] = ()) -> sqlite3.Row | None:
         """Execute a query and fetch the single matching row."""
         with self.get_connection() as conn:
             cur = conn.execute(query, params)
-            return cur.fetchone()
+            return cast(sqlite3.Row | None, cur.fetchone())
 
-    def fetchall(self, query: str, params: tuple | dict = ()) -> list[sqlite3.Row]:
+    def fetchall(self, query: str, params: tuple[Any, ...] | dict[str, Any] = ()) -> list[sqlite3.Row]:
         """Execute a query and fetch all matching rows."""
         with self.get_connection() as conn:
             cur = conn.execute(query, params)

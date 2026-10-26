@@ -5,7 +5,7 @@ SQLPhantom PySide6 About dialog with brand logo and upstream attribution.
 from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from sqlphantom import (
     __description__,
@@ -24,7 +24,7 @@ class AboutDialog(QDialog):
     and open-source licensing.
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setWindowTitle("About SQLPhantom")
         self.setFixedSize(560, 420)

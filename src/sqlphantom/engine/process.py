@@ -9,6 +9,8 @@ import subprocess
 import sys
 import time
 
+from typing import Any
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,7 +18,7 @@ def find_free_port() -> int:
     """Find and return an available local TCP port."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+        return int(s.getsockname()[1])
 
 
 class SqlmapProcessSupervisor:
@@ -38,7 +40,7 @@ class SqlmapProcessSupervisor:
         self.username = username
         self.password = password
         self.sqlmap_dir = sqlmap_dir or (Path(__file__).resolve().parents[3] / "sqlmap")
-        self.process: subprocess.Popen | None = None
+        self.process: subprocess.Popen[str] | None = None
 
     @property
     def base_url(self) -> str:
@@ -90,8 +92,9 @@ class SqlmapProcessSupervisor:
         # Wait for socket to become active
         start_time = time.time()
         while time.time() - start_time < timeout:
-            if self.process.poll() is not None:
-                _, stderr = self.process.communicate()
+            proc = self.process
+            if proc is not None and proc.poll() is not None:
+                _, stderr = proc.communicate()
                 self.process = None
                 raise RuntimeError(f"sqlmapapi exited prematurely: {stderr}")
             if self.is_port_listening():
@@ -116,9 +119,14 @@ class SqlmapProcessSupervisor:
                     self.process.wait()
             self.process = None
 
-    def __enter__(self):
+    def __enter__(self) -> "SqlmapProcessSupervisor":
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: Any,
+    ) -> None:
         self.stop()

@@ -6,7 +6,7 @@ from collections import defaultdict
 from collections.abc import Callable
 import logging
 import threading
-from typing import TypeVar
+from typing import Any, TypeVar
 from uuid import uuid4
 
 from sqlphantom.domain.events import BaseEvent

@@ -3,6 +3,7 @@ SQLPhantom Textual Terminal User Interface Application.
 """
 
 from pathlib import Path
+from typing import Any
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Horizontal
@@ -24,7 +25,7 @@ from sqlphantom.tui.screens.live_monitor import LiveMonitorScreen
 from sqlphantom.tui.theme import SQLPHANTOM_CSS
 
 
-class SQLPhantomApp(App):
+class SQLPhantomApp(App[None]):
     """
     SQLPhantom Interactive Terminal Workstation.
     Full-featured terminal UI providing assessment configuration,
@@ -49,8 +50,8 @@ class SQLPhantomApp(App):
         self,
         db_path: str | Path = ":memory:",
         stage_duration: float = 0.4,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         super().__init__(**kwargs)
         # Core Foundation Services
         self.db_manager = DatabaseManager(db_path)
@@ -104,7 +105,7 @@ class SQLPhantomApp(App):
     def action_nav(self, screen_name: str) -> None:
         self.switch_screen(screen_name)
 
-    def switch_screen(self, screen_name: str) -> None:
+    def switch_screen(self, screen_name: Any) -> Any:
         """Switch the main workspace view to the requested screen."""
         self._current_screen_id = screen_name
 

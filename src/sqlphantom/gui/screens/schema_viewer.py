@@ -3,6 +3,7 @@ SQLPhantom PySide6 Database Schema Tree & Table Dump Explorer screen.
 """
 
 from pathlib import Path
+from typing import Any
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -30,7 +31,7 @@ class SchemaViewerScreen(QWidget):
     and preview dumped data records with one-click CSV export.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
         self._current_dump: TableDump | None = None
@@ -59,7 +60,7 @@ class SchemaViewerScreen(QWidget):
         layout.addWidget(self.lbl_status)
 
         # Splitter: Left Schema Tree, Right Table Grid
-        splitter = QSplitter(Qt.Horizontal)
+        splitter = QSplitter(Qt.Orientation.Horizontal)
 
         # Left: Schema Tree
         left_frame = QFrame()
@@ -69,7 +70,7 @@ class SchemaViewerScreen(QWidget):
 
         self.tree = QTreeWidget()
         self.tree.setHeaderLabels(["Database Object", "Type / Rows"])
-        self.tree.header().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.tree.header().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.tree.itemClicked.connect(self._on_tree_item_clicked)
         left_layout.addWidget(self.tree)
         splitter.addWidget(left_frame)
@@ -151,17 +152,17 @@ class SchemaViewerScreen(QWidget):
 
         for db in schemas:
             db_item = QTreeWidgetItem(self.tree, [f"🗄️ {db.name}", f"DBMS: {db.dbms or 'Unknown'}"])
-            db_item.setData(0, Qt.UserRole, ("db", db.name))
+            db_item.setData(0, Qt.ItemDataRole.UserRole, ("db", db.name))
 
             for tbl in db.tables:
                 row_txt = f"{tbl.estimated_row_count} rows" if tbl.estimated_row_count is not None else ""
                 tbl_item = QTreeWidgetItem(db_item, [f"📋 {tbl.name}", row_txt])
-                tbl_item.setData(0, Qt.UserRole, ("table", db.name, tbl.name))
+                tbl_item.setData(0, Qt.ItemDataRole.UserRole, ("table", db.name, tbl.name))
 
                 for col in tbl.columns:
                     pk_marker = " 🔑 (PK)" if col.is_primary_key else ""
                     col_item = QTreeWidgetItem(tbl_item, [f"• {col.name}{pk_marker}", col.data_type])
-                    col_item.setData(0, Qt.UserRole, ("col", db.name, tbl.name, col.name))
+                    col_item.setData(0, Qt.ItemDataRole.UserRole, ("col", db.name, tbl.name, col.name))
 
             db_item.setExpanded(True)
 
@@ -180,11 +181,11 @@ class SchemaViewerScreen(QWidget):
                 item = QTableWidgetItem(str(val))
                 self.table_grid.setItem(row_idx, col_idx, item)
 
-        self.table_grid.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.table_grid.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.lbl_status.setText(f"Loaded {dump.row_count} records from {dump.database}.{dump.table}")
 
     def _on_tree_item_clicked(self, item: QTreeWidgetItem, column: int) -> None:
-        data = item.data(0, Qt.UserRole)
+        data = item.data(0, Qt.ItemDataRole.UserRole)
         if not data:
             return
 

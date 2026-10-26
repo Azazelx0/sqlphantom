@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QVBoxLayout,
+    QWidget,
 )
 
 from sqlphantom.domain.models import ScopeRule, Target
@@ -26,7 +27,7 @@ class ScopeConfigDialog(QDialog):
     an interactive pre-flight scope testing workbench.
     """
 
-    def __init__(self, current_scope: ScopeRule | None = None, parent=None):
+    def __init__(self, current_scope: ScopeRule | None = None, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Scope Boundary Rules & Safety Guardrails")
         self.resize(560, 480)
@@ -91,7 +92,9 @@ class ScopeConfigDialog(QDialog):
         layout.addWidget(test_frame)
 
         # Dialog Buttons
-        btn_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        btn_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btn_box.accepted.connect(self.accept)
         btn_box.rejected.connect(self.reject)
         layout.addWidget(btn_box)

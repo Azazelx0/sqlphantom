@@ -44,8 +44,8 @@ class MainWindow(QMainWindow):
         self,
         db_path: str | Path = ":memory:",
         stage_duration: float = 0.4,
-        parent=None,
-    ):
+        parent: QWidget | None = None,
+    ) -> None:
         super().__init__(parent)
         self.setWindowTitle("SQLPhantom — sqlmap Enhanced")
         self.resize(1280, 800)
@@ -116,19 +116,19 @@ class MainWindow(QMainWindow):
         if logo_path.exists():
             from PySide6.QtGui import QPixmap
             logo_lbl = QLabel()
-            logo_lbl.setAlignment(Qt.AlignCenter)
+            logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
             pix = QPixmap(str(logo_path)).scaled(
-                64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation
+                64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
             )
             logo_lbl.setPixmap(pix)
             logo_lbl.setStyleSheet("padding: 6px 0px 0px 0px;")
             side_layout.addWidget(logo_lbl)
 
         brand_lbl = QLabel(__product__)
-        brand_lbl.setAlignment(Qt.AlignCenter)
+        brand_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         brand_lbl.setObjectName("sidebar-brand")
         sub_lbl = QLabel(f"{__tagline__}")
-        sub_lbl.setAlignment(Qt.AlignCenter)
+        sub_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         sub_lbl.setObjectName("sidebar-subtitle")
         side_layout.addWidget(brand_lbl)
         side_layout.addWidget(sub_lbl)

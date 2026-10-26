@@ -4,6 +4,7 @@ SQLPhantom data access repositories for Projects, Findings, and Sessions.
 
 from datetime import datetime, timezone
 import json
+import sqlite3
 
 from sqlphantom.domain.enums import Confidence, FindingStatus, FindingType, Severity
 from sqlphantom.domain.models import (
@@ -60,7 +61,7 @@ class ProjectRepository:
         cur = self.db.execute("DELETE FROM projects WHERE id = ?", (project_id,))
         return cur.rowcount > 0
 
-    def _row_to_project(self, row) -> Project:
+    def _row_to_project(self, row: sqlite3.Row) -> Project:
         raw_targets = json.loads(row["targets_json"] or "[]")
         targets = [Target(**t) for t in raw_targets]
         return Project(
@@ -142,7 +143,7 @@ class FindingRepository:
         rows = self.db.fetchall("SELECT * FROM findings ORDER BY discovered_at DESC")
         return [self._row_to_finding(r) for r in rows]
 
-    def _row_to_finding(self, row) -> Finding:
+    def _row_to_finding(self, row: sqlite3.Row) -> Finding:
         raw_status = row["status"] if "status" in row.keys() and row["status"] else "ACTIVE"
         clean_status = str(raw_status).replace("FindingStatus.", "").upper()
         try:
@@ -227,7 +228,7 @@ class SessionRepository:
         cur = self.db.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
         return cur.rowcount > 0
 
-    def _row_to_session(self, row) -> Session:
+    def _row_to_session(self, row: sqlite3.Row) -> Session:
         config = AssessmentConfig(**json.loads(row["config_json"]))
         result = (
             JobResult(**json.loads(row["result_json"]))

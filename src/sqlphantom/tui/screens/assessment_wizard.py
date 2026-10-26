@@ -2,6 +2,7 @@
 SQLPhantom TUI Assessment Setup Wizard screen.
 """
 
+from typing import Any
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Input, Label, Static
@@ -105,11 +106,12 @@ class AssessmentWizardScreen(Static):
 
         # Dispatch via AssessmentService
         try:
-            job_id = self.app.assessment_service.create_assessment(config)
-            self.app.assessment_service.start_assessment(job_id)
-            self.app.active_job_id = job_id
+            app: Any = self.app
+            job_id = app.assessment_service.create_assessment(config)
+            app.assessment_service.start_assessment(job_id)
+            app.active_job_id = job_id
 
             # Switch to live monitoring screen
-            self.app.switch_screen("monitor")
+            app.switch_screen("monitor")
         except Exception as exc:
             err_label.update(f"[red]Failed to launch job: {exc}[/red]")

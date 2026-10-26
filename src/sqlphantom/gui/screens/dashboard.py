@@ -2,6 +2,8 @@
 SQLPhantom PySide6 Dashboard screen.
 """
 
+from typing import Any
+
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -23,7 +25,7 @@ class DashboardScreen(QWidget):
     system telemetry, and recent assessment targets.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
 
@@ -87,7 +89,7 @@ class DashboardScreen(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["Project", "Target URL", "Method", "Scope Domain", "Status"])
-        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         targets_layout.addWidget(self.table)
 
         main_layout.addWidget(targets_card)

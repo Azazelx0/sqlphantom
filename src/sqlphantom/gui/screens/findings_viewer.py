@@ -3,6 +3,7 @@ SQLPhantom PySide6 Findings and Evidence triage screen.
 """
 
 from pathlib import Path
+from typing import Any
 from PySide6.QtWidgets import (
     QApplication,
     QFrame,
@@ -32,7 +33,7 @@ class FindingsViewerScreen(QWidget):
     and exporting formal reports.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
         self._findings_map: dict[str, Finding] = {}
@@ -81,7 +82,7 @@ class FindingsViewerScreen(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(["Severity", "Type", "Param", "Title"])
-        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         self.table.itemSelectionChanged.connect(self._on_row_selected)
         left_layout.addWidget(self.table)
         splitter.addWidget(left_widget)

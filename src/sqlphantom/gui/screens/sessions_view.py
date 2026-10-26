@@ -3,6 +3,7 @@ SQLPhantom PySide6 Sessions and Project Workspace History screen.
 """
 
 from pathlib import Path
+from typing import Any
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -27,7 +28,7 @@ class SessionsScreen(QWidget):
     and run session drift comparison between sequential audits.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
         self._sessions_map: dict[str, Session] = {}
@@ -71,7 +72,7 @@ class SessionsScreen(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(["Date", "Target URL", "Findings", "Status"])
-        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.table.itemSelectionChanged.connect(self._on_session_selected)
         left_layout.addWidget(self.table)
         splitter.addWidget(left_widget)
@@ -174,8 +175,12 @@ class SessionsScreen(QWidget):
             return
 
         row1, row2 = selected_rows[0], selected_rows[1]
-        id1 = self.table.item(row1, 0).data(1000)
-        id2 = self.table.item(row2, 0).data(1000)
+        item1 = self.table.item(row1, 0)
+        item2 = self.table.item(row2, 0)
+        if not item1 or not item2:
+            return
+        id1 = item1.data(1000)
+        id2 = item2.data(1000)
 
         s1 = self._sessions_map.get(id1)
         s2 = self._sessions_map.get(id2)

@@ -3,6 +3,7 @@ SQLPhantom TUI Findings and Evidence triage screen.
 """
 
 from pathlib import Path
+from typing import Any
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, DataTable, Label, Static
@@ -140,21 +141,22 @@ class FindingsScreen(Static):
 
         report_dir = Path("reports")
         report_dir.mkdir(exist_ok=True)
+        app: Any = self.app
 
         if event.button.id == "btn-export-md":
-            content = self.app.report_service.generate_report(findings, fmt=ReportFormat.MARKDOWN)
+            content = app.report_service.generate_report(findings, fmt=ReportFormat.MARKDOWN)
             out_file = report_dir / "assessment_report.md"
             out_file.write_text(content, encoding="utf-8")
             status_lbl.update(f"[green]Exported Markdown report to {out_file.absolute()}[/green]")
 
         elif event.button.id == "btn-export-json":
-            content = self.app.report_service.generate_report(findings, fmt=ReportFormat.JSON)
+            content = app.report_service.generate_report(findings, fmt=ReportFormat.JSON)
             out_file = report_dir / "assessment_report.json"
             out_file.write_text(content, encoding="utf-8")
             status_lbl.update(f"[green]Exported JSON report to {out_file.absolute()}[/green]")
 
         elif event.button.id == "btn-export-html":
-            content = self.app.report_service.generate_report(findings, fmt=ReportFormat.HTML)
+            content = app.report_service.generate_report(findings, fmt=ReportFormat.HTML)
             out_file = report_dir / "assessment_report.html"
             out_file.write_text(content, encoding="utf-8")
             status_lbl.update(f"[green]Exported HTML report to {out_file.absolute()}[/green]")

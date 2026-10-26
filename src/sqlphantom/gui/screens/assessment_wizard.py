@@ -2,6 +2,8 @@
 SQLPhantom PySide6 Assessment Setup Wizard screen.
 """
 
+from typing import Any
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -26,9 +28,10 @@ class AssessmentWizardScreen(QWidget):
     Form-based wizard for configuring targets, boundary scopes, and injection parameters.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
+        self._custom_scope: ScopeRule | None = None
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)

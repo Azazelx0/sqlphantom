@@ -23,7 +23,7 @@ class PluginRegistry:
     and resilient error-isolated execution.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._plugins: dict[str, BasePlugin] = {}
         self._lock = threading.RLock()
 
@@ -86,7 +86,7 @@ class PluginRegistry:
         with self._lock:
             return [p for p in self._plugins.values() if isinstance(p, FindingEnricherPlugin)]
 
-    def execute_safely(self, fn: Callable[..., Any], *args, default_return: Any = None, **kwargs) -> Any:
+    def execute_safely(self, fn: Callable[..., Any], *args: Any, default_return: Any = None, **kwargs: Any) -> Any:
         """
         Execute a plugin function inside an exception sandbox, preventing
         third-party extension errors from terminating core operations.

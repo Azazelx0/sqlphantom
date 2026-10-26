@@ -2,13 +2,13 @@
 Reusable PySide6 KPI metric card widget.
 """
 
-from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget
 
 
 class KPICard(QFrame):
     """Card widget rendering key metrics and operational telemetry."""
 
-    def __init__(self, title: str, value: str, subtext: str = "", parent=None):
+    def __init__(self, title: str, value: str, subtext: str = "", parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setProperty("class", "card-frame")
 

@@ -2,6 +2,8 @@
 SQLPhantom PySide6 Raw HTTP Request Editor screen.
 """
 
+from typing import Any
+
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -32,7 +34,7 @@ class RequestEditorScreen(QWidget):
         '{"username": "admin\' OR 1=1 --", "password": "password123"}'
     )
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
 

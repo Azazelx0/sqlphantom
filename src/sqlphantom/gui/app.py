@@ -12,7 +12,8 @@ from sqlphantom.gui.theme import DARK_STYLESHEET
 
 def run_gui_app(db_path: str | Path | None = None) -> int:
     """Initialize and run the PySide6 desktop GUI workstation."""
-    app = QApplication.instance() or QApplication(sys.argv)
+    instance = QApplication.instance()
+    app = instance if isinstance(instance, QApplication) else QApplication(sys.argv)
     app.setStyleSheet(DARK_STYLESHEET)
 
     if db_path is None:

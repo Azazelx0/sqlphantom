@@ -15,6 +15,7 @@ from sqlphantom.domain.models import (
     Project,
     Target,
 )
+from sqlphantom.storage.repositories import ProjectRepository
 
 
 def _utc_now() -> datetime:
@@ -27,7 +28,7 @@ class ProjectService:
     Supports in-memory tracking with optional repository delegation.
     """
 
-    def __init__(self, repository=None):
+    def __init__(self, repository: ProjectRepository | None = None) -> None:
         self.repository = repository
         self._in_memory: dict[str, Project] = {}
 

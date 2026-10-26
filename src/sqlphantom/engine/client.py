@@ -2,7 +2,7 @@
 SQLPhantom HTTP REST client communicating with sqlmapapi daemon endpoints.
 """
 
-from typing import Any
+from typing import Any, cast
 import httpx
 
 
@@ -25,7 +25,7 @@ class SqlmapApiClient:
         self.timeout = timeout
 
     def _client(self) -> httpx.Client:
-        auth = (self.username, self.password) if (self.username and self.password) else None
+        auth = (self.username, self.password) if self.username and self.password else None
         return httpx.Client(base_url=self.base_url, auth=auth, timeout=self.timeout)
 
     def new_task(self) -> str:
@@ -36,14 +36,14 @@ class SqlmapApiClient:
             data = resp.json()
             if not data.get("success"):
                 raise RuntimeError(f"Failed to create new task: {data}")
-            return data["taskid"]
+            return str(data["taskid"])
 
     def delete_task(self, task_id: str) -> bool:
         """Delete an existing task."""
         with self._client() as client:
             resp = client.get(f"/task/{task_id}/delete")
             if resp.status_code == 200:
-                return resp.json().get("success", False)
+                return bool(resp.json().get("success", False))
             return False
 
     def start_scan(self, task_id: str, options: dict[str, Any]) -> bool:
@@ -51,14 +51,14 @@ class SqlmapApiClient:
         with self._client() as client:
             resp = client.post(f"/scan/{task_id}/start", json=options)
             resp.raise_for_status()
-            return resp.json().get("success", False)
+            return bool(resp.json().get("success", False))
 
     def get_status(self, task_id: str) -> dict[str, Any]:
         """Query scan status (e.g. status='running' or 'terminated')."""
         with self._client() as client:
             resp = client.get(f"/scan/{task_id}/status")
             resp.raise_for_status()
-            return resp.json()
+            return cast(dict[str, Any], resp.json())
 
     def get_data(self, task_id: str) -> list[dict[str, Any]]:
         """Retrieve confirmed vulnerabilities and extracted injection data."""
@@ -66,7 +66,7 @@ class SqlmapApiClient:
             resp = client.get(f"/scan/{task_id}/data")
             resp.raise_for_status()
             data = resp.json()
-            return data.get("data", [])
+            return cast(list[dict[str, Any]], data.get("data", []))
 
     def get_log(self, task_id: str) -> list[dict[str, Any]]:
         """Retrieve terminal log messages recorded by the engine."""
@@ -74,14 +74,14 @@ class SqlmapApiClient:
             resp = client.get(f"/scan/{task_id}/log")
             resp.raise_for_status()
             data = resp.json()
-            return data.get("log", [])
+            return cast(list[dict[str, Any]], data.get("log", []))
 
     def stop_scan(self, task_id: str) -> bool:
         """Request scan to stop gracefully."""
         with self._client() as client:
             resp = client.get(f"/scan/{task_id}/stop")
             if resp.status_code == 200:
-                return resp.json().get("success", False)
+                return bool(resp.json().get("success", False))
             return False
 
     def kill_scan(self, task_id: str) -> bool:
@@ -89,5 +89,5 @@ class SqlmapApiClient:
         with self._client() as client:
             resp = client.get(f"/scan/{task_id}/kill")
             if resp.status_code == 200:
-                return resp.json().get("success", False)
+                return bool(resp.json().get("success", False))
             return False

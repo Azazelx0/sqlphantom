@@ -2,6 +2,8 @@
 SQLPhantom PySide6 Live Assessment Monitoring screen.
 """
 
+from typing import Any
+
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -22,7 +24,7 @@ class LiveMonitorScreen(QWidget):
     live execution stages, terminal event logs, and cancel controls.
     """
 
-    def __init__(self, main_window, parent=None):
+    def __init__(self, main_window: Any, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.main_window = main_window
 

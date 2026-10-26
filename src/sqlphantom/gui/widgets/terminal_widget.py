@@ -3,7 +3,7 @@ Real-time PySide6 color-coded terminal log viewer.
 """
 
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QTextEdit
+from PySide6.QtWidgets import QTextEdit, QWidget
 
 
 class TerminalWidget(QTextEdit):
@@ -12,7 +12,7 @@ class TerminalWidget(QTextEdit):
     network status, and vulnerability notifications.
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setReadOnly(True)
         self.setStyleSheet(
