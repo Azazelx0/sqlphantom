@@ -13,30 +13,38 @@ build/
 .venv/
 venv/
 ENV/
+env/
 
-# IDE
+# Type checking, Linting & Testing
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# IDE & Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# Operating System
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
+# Logs & Temporary Files
+*.log
+scratch/
+reports/
 
-# SQLPhantom data
+# Databases
 *.db
 *.sqlite
 *.sqlite3
-reports/
 
 # Packaging
 *.spec
