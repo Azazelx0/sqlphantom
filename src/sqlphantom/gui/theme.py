@@ -243,6 +243,108 @@ QScrollBar::handle:vertical:hover {
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     height: 0px;
 }
+
+/* Stitch Top App Bar */
+#top-app-bar {
+    background-color: #0F172A;
+    border-bottom: 1px solid #334155;
+    min-height: 48px;
+    max-height: 48px;
+}
+
+QLineEdit#target-quick-input {
+    background-color: #111827;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #E2E8F0;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+QLineEdit#target-quick-input:focus {
+    border: 1px solid #7C3AED;
+}
+
+/* Stitch Badges & Bento Cards */
+.badge-pill-emerald {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-pill-rose {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-pill-violet {
+    background-color: rgba(124, 58, 237, 0.2);
+    color: #C084FC;
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-pill-amber {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.bento-card {
+    background-color: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.bento-card:hover {
+    border: 1px solid rgba(124, 58, 237, 0.5);
+}
+
+.hero-banner {
+    background-color: #111827;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+
+.stage-stepper-box {
+    background-color: #111827;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.stage-stepper-active {
+    background-color: rgba(124, 58, 237, 0.25);
+    border: 1px solid #8B5CF6;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.stage-stepper-done {
+    background-color: #111827;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 8px;
+    padding: 8px 10px;
+}
 """
 
 LIGHT_STYLESHEET = """

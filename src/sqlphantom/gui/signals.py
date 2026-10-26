@@ -10,6 +10,7 @@ from sqlphantom.domain.events import (
     JobCancelled,
     JobCompleted,
     JobFailed,
+    JobStarted,
     ProgressUpdated,
     StageChanged,
 )
@@ -21,6 +22,7 @@ class EventSignalBridge(QObject):
     thread-safe PySide6 Qt signals.
     """
 
+    job_started = Signal(str)  # (job_id)
     stage_changed = Signal(str, str)  # (stage, previous_stage)
     progress_updated = Signal(float, str)  # (progress, message)
     finding_discovered = Signal(str, str, str, str, str)  # (finding_id, type, severity, param, title)
@@ -34,6 +36,7 @@ class EventSignalBridge(QObject):
         self._subscribe()
 
     def _subscribe(self) -> None:
+        self.event_bus.subscribe(JobStarted, lambda e: self.job_started.emit(e.job_id))
         self.event_bus.subscribe(StageChanged, lambda e: self.stage_changed.emit(e.stage, e.previous_stage or ""))
         self.event_bus.subscribe(ProgressUpdated, lambda e: self.progress_updated.emit(e.progress, e.message))
         self.event_bus.subscribe(
