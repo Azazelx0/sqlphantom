@@ -5,6 +5,7 @@ SQLPhantom PySide6 Assessment Setup Wizard screen.
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QDoubleSpinBox,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -87,6 +88,25 @@ class AssessmentWizardScreen(QWidget):
         row2.addLayout(v_risk)
         form_layout.addLayout(row2)
 
+        # Network Tuning: Proxy & Delay
+        row3 = QHBoxLayout()
+        v_proxy = QVBoxLayout()
+        v_proxy.addWidget(QLabel("Upstream Proxy (e.g. http://127.0.0.1:8080):"))
+        self.input_proxy = QLineEdit()
+        self.input_proxy.setPlaceholderText("Optional: http://proxy:port or socks5://127.0.0.1:9050")
+        v_proxy.addWidget(self.input_proxy)
+        row3.addLayout(v_proxy)
+
+        v_delay = QVBoxLayout()
+        v_delay.addWidget(QLabel("Request Delay / Throttle (sec):"))
+        self.spin_delay = QDoubleSpinBox()
+        self.spin_delay.setRange(0.0, 10.0)
+        self.spin_delay.setSingleStep(0.25)
+        self.spin_delay.setValue(0.0)
+        v_delay.addWidget(self.spin_delay)
+        row3.addLayout(v_delay)
+        form_layout.addLayout(row3)
+
         # Boundary Safeguard Checkbox
         self.chk_private_ips = QCheckBox("Block RFC 1918 / Loopback Private IP addresses (Recommended)")
         self.chk_private_ips.setChecked(True)
@@ -137,7 +157,17 @@ class AssessmentWizardScreen(QWidget):
             self.lbl_error.setText(f"Scope Rejected: {reason}")
             return
 
-        config = AssessmentConfig(target=target, scope=scope, level=level, risk=risk)
+        proxy_val = self.input_proxy.text().strip() or None
+        delay_val = self.spin_delay.value()
+
+        config = AssessmentConfig(
+            target=target,
+            scope=scope,
+            level=level,
+            risk=risk,
+            proxy=proxy_val,
+            delay=delay_val,
+        )
 
         try:
             job_id = self.main_window.assessment_service.create_assessment(config)

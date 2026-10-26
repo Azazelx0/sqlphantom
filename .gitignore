@@ -36,6 +36,7 @@ htmlcov/
 *.db
 *.sqlite
 *.sqlite3
+reports/
 
 # Packaging
 *.spec

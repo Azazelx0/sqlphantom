@@ -27,6 +27,8 @@ from sqlphantom.gui.screens.dashboard import DashboardScreen
 from sqlphantom.gui.screens.findings_viewer import FindingsViewerScreen
 from sqlphantom.gui.screens.live_monitor import LiveMonitorScreen
 from sqlphantom.gui.screens.request_editor import RequestEditorScreen
+from sqlphantom.gui.screens.schema_viewer import SchemaViewerScreen
+from sqlphantom.gui.screens.sessions_view import SessionsScreen
 from sqlphantom.gui.signals import EventSignalBridge
 from sqlphantom.storage.database import DatabaseManager
 from sqlphantom.storage.repositories import FindingRepository, ProjectRepository, SessionRepository
@@ -114,6 +116,8 @@ class MainWindow(QMainWindow):
             ("request", "Request Editor"),
             ("monitor", "Live Monitor"),
             ("findings", "Findings"),
+            ("schema", "Schema Explorer"),
+            ("sessions", "Sessions & History"),
         ]
 
         for key, label in nav_items:
@@ -145,6 +149,8 @@ class MainWindow(QMainWindow):
             "request": RequestEditorScreen(self),
             "monitor": LiveMonitorScreen(self),
             "findings": FindingsViewerScreen(self),
+            "schema": SchemaViewerScreen(self),
+            "sessions": SessionsScreen(self),
         }
 
         for screen in self.screens.values():
@@ -168,6 +174,8 @@ class MainWindow(QMainWindow):
                 screen.refresh_state()
             elif hasattr(screen, "refresh_findings"):
                 screen.refresh_findings()
+            elif hasattr(screen, "refresh_sessions"):
+                screen.refresh_sessions()
 
     def launch_quick_scan(self) -> None:
         target = Target(url="http://testphp.vulnweb.com/listproducts.php?cat=1")

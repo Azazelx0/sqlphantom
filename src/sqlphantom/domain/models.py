@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlphantom.domain.enums import (
     AssessmentStage,
     Confidence,
+    FindingStatus,
     FindingType,
     HttpMethod,
     JobStatus,
@@ -54,6 +55,9 @@ class AssessmentConfig(BaseModel):
     risk: int = Field(default=1, ge=1, le=3)
     threads: int = Field(default=1, ge=1, le=10)
     timeout: int = Field(default=30, ge=1)
+    proxy: str | None = None
+    delay: float = Field(default=0.0, ge=0.0)
+    crawl_depth: int = Field(default=0, ge=0)
     tamper_scripts: list[str] = Field(default_factory=list)
     custom_injection_points: list[str] = Field(default_factory=list)
     dbms: str | None = None
@@ -70,6 +74,7 @@ class Finding(BaseModel):
     finding_type: FindingType
     severity: Severity = Severity.HIGH
     confidence: Confidence = Confidence.CONFIRMED
+    status: FindingStatus = FindingStatus.ACTIVE
     parameter: str
     payload: str
     url: str
@@ -77,6 +82,7 @@ class Finding(BaseModel):
     description: str = ""
     evidence: str = ""
     remediation: str = ""
+    analyst_notes: str = ""
     dbms: str | None = None
     discovered_at: datetime = Field(default_factory=_utc_now)
 

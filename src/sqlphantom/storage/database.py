@@ -66,6 +66,7 @@ class DatabaseManager:
             finding_type TEXT NOT NULL,
             severity TEXT NOT NULL,
             confidence TEXT NOT NULL,
+            status TEXT DEFAULT 'ACTIVE',
             parameter TEXT NOT NULL,
             payload TEXT NOT NULL,
             url TEXT NOT NULL,
@@ -73,6 +74,7 @@ class DatabaseManager:
             description TEXT DEFAULT '',
             evidence TEXT DEFAULT '',
             remediation TEXT DEFAULT '',
+            analyst_notes TEXT DEFAULT '',
             dbms TEXT,
             discovered_at TEXT NOT NULL
         );
@@ -104,6 +106,15 @@ class DatabaseManager:
         """
         with self.get_connection() as conn:
             conn.executescript(schema)
+            # Safe migration for newly added columns on existing schemas
+            try:
+                conn.execute("ALTER TABLE findings ADD COLUMN status TEXT DEFAULT 'ACTIVE'")
+            except Exception:
+                pass
+            try:
+                conn.execute("ALTER TABLE findings ADD COLUMN analyst_notes TEXT DEFAULT ''")
+            except Exception:
+                pass
 
     def execute(self, query: str, params: tuple | dict = ()) -> sqlite3.Cursor:
         """Execute a query within a transactional connection."""

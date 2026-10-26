@@ -5,7 +5,7 @@ SQLPhantom data access repositories for Projects, Findings, and Sessions.
 from datetime import datetime, timezone
 import json
 
-from sqlphantom.domain.enums import Confidence, FindingType, Severity
+from sqlphantom.domain.enums import Confidence, FindingStatus, FindingType, Severity
 from sqlphantom.domain.models import (
     AssessmentConfig,
     Finding,
@@ -82,28 +82,36 @@ class FindingRepository:
     def save(self, finding: Finding, job_id: str | None = None) -> None:
         query = """
         INSERT INTO findings (
-            id, job_id, finding_type, severity, confidence,
+            id, job_id, finding_type, severity, confidence, status,
             parameter, payload, url, title, description,
-            evidence, remediation, dbms, discovered_at
+            evidence, remediation, analyst_notes, dbms, discovered_at
         ) VALUES (
-            :id, :job_id, :finding_type, :severity, :confidence,
+            :id, :job_id, :finding_type, :severity, :confidence, :status,
             :parameter, :payload, :url, :title, :description,
-            :evidence, :remediation, :dbms, :discovered_at
+            :evidence, :remediation, :analyst_notes, :dbms, :discovered_at
         ) ON CONFLICT(id) DO UPDATE SET
             severity=excluded.severity,
             confidence=excluded.confidence,
+            status=excluded.status,
             payload=excluded.payload,
             evidence=excluded.evidence,
-            remediation=excluded.remediation;
+            remediation=excluded.remediation,
+            analyst_notes=excluded.analyst_notes;
         """
+        status_val = finding.status.value if hasattr(finding.status, "value") else str(finding.status)
+        sev_val = finding.severity.value if hasattr(finding.severity, "value") else str(finding.severity)
+        conf_val = finding.confidence.value if hasattr(finding.confidence, "value") else str(finding.confidence)
+        type_val = finding.finding_type.value if hasattr(finding.finding_type, "value") else str(finding.finding_type)
+
         self.db.execute(
             query,
             {
                 "id": finding.id,
                 "job_id": job_id,
-                "finding_type": str(finding.finding_type),
-                "severity": str(finding.severity),
-                "confidence": str(finding.confidence),
+                "finding_type": type_val,
+                "severity": sev_val,
+                "confidence": conf_val,
+                "status": status_val,
                 "parameter": finding.parameter,
                 "payload": finding.payload,
                 "url": finding.url,
@@ -111,6 +119,7 @@ class FindingRepository:
                 "description": finding.description,
                 "evidence": finding.evidence,
                 "remediation": finding.remediation,
+                "analyst_notes": finding.analyst_notes,
                 "dbms": finding.dbms,
                 "discovered_at": finding.discovered_at.isoformat(),
             },
@@ -134,11 +143,24 @@ class FindingRepository:
         return [self._row_to_finding(r) for r in rows]
 
     def _row_to_finding(self, row) -> Finding:
+        raw_status = row["status"] if "status" in row.keys() and row["status"] else "ACTIVE"
+        clean_status = str(raw_status).replace("FindingStatus.", "").upper()
+        try:
+            status_enum = FindingStatus(clean_status)
+        except ValueError:
+            status_enum = FindingStatus.ACTIVE
+
+        raw_sev = str(row["severity"]).replace("Severity.", "").upper()
+        raw_conf = str(row["confidence"]).replace("Confidence.", "").upper()
+        raw_type = str(row["finding_type"]).replace("FindingType.", "").upper()
+
+        analyst_notes_val = row["analyst_notes"] if "analyst_notes" in row.keys() and row["analyst_notes"] else ""
         return Finding(
             id=row["id"],
-            finding_type=FindingType(row["finding_type"]),
-            severity=Severity(row["severity"]),
-            confidence=Confidence(row["confidence"]),
+            finding_type=FindingType(raw_type) if raw_type in FindingType.__members__ else FindingType.SQL_INJECTION,
+            severity=Severity(raw_sev) if raw_sev in Severity.__members__ else Severity.HIGH,
+            confidence=Confidence(raw_conf) if raw_conf in Confidence.__members__ else Confidence.CONFIRMED,
+            status=status_enum,
             parameter=row["parameter"],
             payload=row["payload"],
             url=row["url"],
@@ -146,6 +168,7 @@ class FindingRepository:
             description=row["description"],
             evidence=row["evidence"],
             remediation=row["remediation"],
+            analyst_notes=analyst_notes_val,
             dbms=row["dbms"],
             discovered_at=datetime.fromisoformat(row["discovered_at"]),
         )
@@ -194,6 +217,10 @@ class SessionRepository:
             "SELECT * FROM sessions WHERE project_id = ? ORDER BY created_at DESC",
             (project_id,),
         )
+        return [self._row_to_session(r) for r in rows]
+
+    def list_all(self) -> list[Session]:
+        rows = self.db.fetchall("SELECT * FROM sessions ORDER BY created_at DESC")
         return [self._row_to_session(r) for r in rows]
 
     def delete(self, session_id: str) -> bool:

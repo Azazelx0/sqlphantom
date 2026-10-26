@@ -174,6 +174,12 @@ class SqlmapEngineAdapter(EngineAdapter):
         if config.techniques:
             opts["tech"] = "".join(config.techniques)
 
+        if config.proxy:
+            opts["proxy"] = config.proxy
+
+        if config.delay > 0:
+            opts["delay"] = config.delay
+
         opts.update(config.extra_options)
         return opts
 

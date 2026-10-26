@@ -73,3 +73,11 @@ class HttpMethod(str, Enum):
     PATCH = "PATCH"
     HEAD = "HEAD"
     OPTIONS = "OPTIONS"
+
+
+class FindingStatus(str, Enum):
+    """Analyst review and triage status for a finding."""
+    ACTIVE = "ACTIVE"
+    CONFIRMED = "CONFIRMED"
+    FALSE_POSITIVE = "FALSE_POSITIVE"
+    VERIFIED_FIXED = "VERIFIED_FIXED"
