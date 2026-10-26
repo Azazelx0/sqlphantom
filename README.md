@@ -19,20 +19,21 @@ SQLPhantom is an open-source, modernized desktop and terminal application built 
 > SQLPhantom is an independent project and is **not** an official sqlmap release, nor is it endorsed by the official sqlmap development team. SQLPhantom builds upon upstream [sqlmap](https://github.com/sqlmapproject/sqlmap) (pinned at commit [`6e06114`](https://github.com/sqlmapproject/sqlmap/commit/6e06114947397e1f5bbe428230e25cf1cf9f1a55), version 1.10.10) under the GNU General Public License v2 or later (GPL v2+). All original sqlmap copyrights remain with their respective authors.
 
 > [!NOTE]
-> **Project Status: Early Development (Phase 1 Foundation)**
-> SQLPhantom is currently at version `0.1.0-dev`. Project scaffolding, configuration, and architecture boundaries are in place. Core domain models, SQLite persistence, and engine API adapters are currently in active implementation. GUI and TUI interfaces are planned for subsequent phases. See [ROADMAP.md](file:///d:/Projects/SQLPhantom/ROADMAP.md) and [FEATURES.md](file:///d:/Projects/SQLPhantom/FEATURES.md) for full delivery timelines.
+> **Project Status: Feature-Complete & Production Ready (v0.1.0)**
+> SQLPhantom is fully implemented, verified with 53 automated tests, and strict Mypy type-checked. It features a complete PySide6 desktop GUI workstation, an interactive Textual TUI, upstream `sqlmapapi` REST engine supervision, defensive remediation generation, and standalone Windows binary packaging.
 
 ---
 
 ## Key Highlights
 
-- **Desktop GUI (PySide6)** `[PLANNED]`: Window title `SQLPhantom — sqlmap Enhanced`. Features visual target configuration, structured request/response inspection, live execution telemetry, visual database schema trees, and interactive data dump explorers.
-- **Interactive TUI (Textual)** `[PLANNED]`: Full-featured terminal interface designed for SSH sessions, headless environments, and keyboard-centric security operators.
-- **Unified CLI (`sqlphantom`)** `[IN_PROGRESS]`: Command-line entry point supporting automation, batch execution, and direct API interaction.
-- **Engine Isolation via REST API** `[IN_PROGRESS]`: Integrates with upstream `sqlmapapi.py` in a managed subprocess. No monkey-patching or global state contamination; crashes in engine tasks do not crash the UI.
-- **Persistent Session Storage** `[IN_PROGRESS]`: Centralized SQLite storage tracks all targets, scan configurations, raw HTTP exchanges, and discovered vulnerabilities for historical auditing.
-- **Scope & Safety Guardrails** `[PLANNED]`: Built-in target scope validation prevents accidental out-of-scope scanning, with automatic redaction of sensitive credentials and headers in stored artifacts.
-- **Multi-Format Reporting** `[PLANNED]`: Export professional assessment reports in HTML, Markdown, and JSON.
+- **Desktop GUI (PySide6)** `[READY]`: Window title `SQLPhantom — sqlmap Enhanced`. Features visual target configuration, structured request/response inspection, live execution telemetry, visual database schema trees, and interactive data dump explorers with CSV export.
+- **Interactive TUI (Textual)** `[READY]`: Full-featured terminal interface designed for SSH sessions, headless environments, and keyboard-centric security operators.
+- **Unified CLI (`sqlphantom`)** `[READY]`: Command-line entry point supporting automation, direct REST API interaction, and standalone binary distribution.
+- **Engine Isolation via REST API** `[READY]`: Integrates with upstream `sqlmapapi.py` in an isolated supervisor subprocess. No global state contamination (`conf`, `kb`); engine task crashes do not affect the workstation.
+- **Persistent Session Storage** `[READY]`: Centralized SQLite WAL-mode storage tracks targets, scan configurations, historical runs, and confirmed vulnerabilities with automated schema migration.
+- **Scope & Safety Guardrails** `[READY]`: Built-in target scope validation rejects RFC 1918 private IPs, loopback, and link-local ranges by default, with automatic scrubbing of sensitive credentials and headers in stored artifacts and reports.
+- **Defensive Remediation Assistant** `[READY]`: Multi-framework parameterized query recommendations (SQLAlchemy, psycopg, Node.js pg, Java JDBC, PHP PDO, C# EF Core) mapped to CWE-89 & OWASP ASVS v4.0.3.
+- **Multi-Format Reporting** `[READY]`: Export executive and technical assessment reports in HTML (with embedded brand logo), Markdown, and JSON.
 
 ---
 
@@ -95,19 +96,22 @@ SQLPhantom exposes three dedicated executable entry points defined in [`pyprojec
 
 | Command | Interface | Description | Current Status |
 | :--- | :--- | :--- | :--- |
-| `sqlphantom` | CLI | Main command-line interface for batch scans, API daemon control, and utility tasks. | `IN_PROGRESS` |
-| `sqlphantom-gui` | Desktop GUI | PySide6 graphical user interface (`SQLPhantom — sqlmap Enhanced`). | `PLANNED` (Phase 3) |
-| `sqlphantom-tui` | Terminal TUI | Interactive Textual console application for keyboard-driven audits. | `PLANNED` (Phase 2) |
+| `sqlphantom` | CLI | Main command-line interface for batch scans, API daemon control, and utility tasks. | `READY` |
+| `sqlphantom-gui` | Desktop GUI | PySide6 graphical user interface (`SQLPhantom — sqlmap Enhanced`). | `READY` |
+| `sqlphantom-tui` | Terminal TUI | Interactive Textual console application for keyboard-driven audits. | `READY` |
 
 ```bash
-# Launch CLI overview
-sqlphantom --version
-
-# Launch GUI (stub during Phase 1)
+# Launch Desktop GUI workstation
 sqlphantom-gui
+# Or: sqlphantom --gui
 
-# Launch TUI (stub during Phase 1)
+# Launch Interactive Terminal TUI
 sqlphantom-tui
+# Or: sqlphantom --tui
+
+# View CLI options & version
+sqlphantom --help
+sqlphantom --version
 ```
 
 For comprehensive usage instructions, command-line arguments, and configuration guidelines, refer to [USAGE.md](file:///d:/Projects/SQLPhantom/USAGE.md).

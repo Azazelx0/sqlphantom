@@ -3,13 +3,8 @@
 Welcome to the **SQLPhantom** user manual. This document guides you through system requirements, installation, interface execution, core workflows, file storage locations, and troubleshooting.
 
 > [!NOTE]
-> **Implementation Status: Version 0.1.0-dev (Phase 1 Foundation)**
-> SQLPhantom is currently in active development. Project scaffolding, dependency definitions, packaging, and domain models are being established.
-> 
-> Throughout this guide:
-> - Features currently in active development are marked `[IN_PROGRESS]`.
-> - Features planned for subsequent milestones (TUI in Phase 2, GUI in Phase 3, Reporting in Phase 4) are explicitly tagged `[PLANNED]`.
-> - Mock or stub functionality is not represented as working.
+> **Implementation Status: Fully Implemented & Ready (v0.1.0)**
+> SQLPhantom is feature-complete with all primary interfaces (Desktop GUI, Terminal TUI, CLI), upstream REST engine supervision, defensive remediation generation, database schema browsing, session drift comparison, and standalone executable bundling.
 
 ---
 
@@ -92,95 +87,96 @@ sqlphantom --version
 
 SQLPhantom provides three primary entry points:
 
-### 3.1. Command-Line Interface (`sqlphantom`) `[IN_PROGRESS]`
+### 3.1. Command-Line Interface (`sqlphantom`) `[READY]`
 
-The CLI entry point allows headless scans, automated pipelines, database management, and diagnostic checks.
+The CLI entry point allows launching the desktop GUI, interactive terminal TUI, or inspecting version information:
 
 ```bash
 # Show version and branding
 sqlphantom --version
 
-# Show general CLI help and available subcommands
+# Show general CLI help
 sqlphantom --help
 
-# Start or check status of the background sqlmapapi engine daemon [IN_PROGRESS]
-sqlphantom engine status
-sqlphantom engine start --port 8775
+# Launch Desktop GUI workstation
+sqlphantom --gui
+# Or directly:
+sqlphantom-gui
 
-# Run an ad-hoc scan against an authorized target [IN_PROGRESS]
-sqlphantom scan --url "http://example.internal/item.php?id=1" --dbms mysql
-
-# List past scan sessions stored in SQLite [IN_PROGRESS]
-sqlphantom session list
+# Launch Terminal TUI
+sqlphantom --tui
+# Or directly:
+sqlphantom-tui
 ```
 
-### 3.2. Desktop Graphical Interface (`sqlphantom-gui`) `[PLANNED]`
+### 3.2. Desktop Graphical Interface (`sqlphantom-gui`) `[READY]`
 
 The desktop graphical interface provides a rich, multi-tab window titled **`SQLPhantom — sqlmap Enhanced`**.
 
 ```bash
 sqlphantom-gui
+# Or: sqlphantom --gui
 ```
 
-#### What `sqlphantom-gui` Will Offer:
-- **Visual Target Builder**: Intuitive forms for URL parameters, HTTP headers, cookies, and injection boundaries without memorizing CLI syntax.
-- **Live Assessment Telemetry**: Color-coded streaming logs, request graphs, and real-time stage progress bars.
-- **Request/Response Diff Viewer**: Side-by-side inspection of baseline HTTP requests and injection payloads with automatic secret redaction.
-- **Interactive Database Tree**: Hierarchical exploration of extracted database schemas, tables, and columns.
-- **Virtualized Data Dump Grid**: High-performance grid for previewing extracted rows and exporting to CSV, JSON, or SQLite.
+#### What `sqlphantom-gui` Delivers:
+- **Visual Target Builder**: Intuitive wizard for URL parameters, HTTP methods, headers, cookies, and injection level/risk sliders.
+- **Visual Scope Safeguards**: Multi-line allowlist editor for domain targets, regex patterns, and private IP rejection with interactive pre-flight testing.
+- **Raw HTTP Request Workbench**: Import or paste full HTTP requests from Burp Suite or OWASP ZAP with one-click parameter extraction.
+- **Live Assessment Telemetry**: Color-coded streaming terminal logs, telemetry KPI cards, and real-time stage progress bars with emergency cancel controls.
+- **Defensive Remediation Assistant**: Automated parameterized query code generation (SQLAlchemy, psycopg, Node.js pg, Java JDBC, PHP PDO, C# EF Core) mapped to CWE-89 & OWASP ASVS v4.0.3.
+- **Interactive Database Schema Explorer**: Hierarchical tree exploration of extracted database schemas, tables, and columns.
+- **Virtualized Data Dump Grid**: High-performance grid for previewing extracted rows with one-click CSV export.
+- **Historical Sessions & Vulnerability Drift**: Session history viewer with side-by-side drift comparison between sequential scans.
+- **Light & Dark Theme Switching**: Instant toggle between Cyber Violet Dark and Enterprise Slate Light themes.
 
-*(Note: During Phase 1, invoking `sqlphantom-gui` displays a clean informative notification detailing its release in Phase 3).*
-
-### 3.3. Terminal User Interface (`sqlphantom-tui`) `[PLANNED]`
+### 3.3. Terminal User Interface (`sqlphantom-tui`) `[READY]`
 
 The interactive TUI provides a full-featured console dashboard optimized for keyboard-driven operators and remote SSH sessions.
 
 ```bash
 sqlphantom-tui
+# Or: sqlphantom --tui
 ```
 
-#### What `sqlphantom-tui` Will Offer:
-- Full-screen dashboard using Textual and Rich with vim-style keyboard navigation.
-- Real-time streaming log panel with search and log level filters.
+#### What `sqlphantom-tui` Delivers:
+- Full-screen dashboard using Textual and Rich with single-key navigation (`d` for Dashboard, `n` for New Scan, `m` for Monitor, `f` for Findings, `r` for Fast Scan, `?` for Help, `q` for Quit).
+- Real-time streaming log panel with payload inspection and stage progression indicators.
 - Active targets and background jobs monitoring table.
-- Interactive findings browser and data dump table viewer.
-
-*(Note: During Phase 1, invoking `sqlphantom-tui` displays a clean informative notification detailing its release in Phase 2).*
+- Interactive findings triage browser with OWASP ASVS remediation recommendations and multi-format report export (HTML, Markdown, JSON).
 
 ---
 
-## 4. Planned Workflows & Features
+## 4. Assessment Workflows
 
-This section details how key assessment workflows will operate once fully implemented:
+### Workflow 1: Defining Scope & Adding Targets
+1. Open the **Scope Boundary Rules** dialog in the wizard.
+2. Define target boundaries (e.g. `testphp.vulnweb.com`).
+3. Enter the target URL or paste an entire HTTP request captured from Burp Suite or OWASP ZAP into the **Request Editor**.
+4. Test the target in the pre-flight tester. If a URL resolves outside the authorized boundary or touches private RFC 1918 IPs, dispatch is blocked with an explicit error.
 
-### Workflow 1: Defining Scope & Adding Targets `[PLANNED]`
-1. Open the **Scope Settings** dialog.
-2. Define target boundaries (e.g. `*.target-company.internal`, IP subnet `10.10.14.0/24`).
-3. Enter the target URL or paste an entire HTTP request captured from Burp Suite or OWASP ZAP.
-4. SQLPhantom automatically checks the target against scope guardrails. If a URL resolves outside the authorized boundary, dispatch is blocked with an explicit error.
-
-### Workflow 2: Launching an Assessment Job `[IN_PROGRESS]`
+### Workflow 2: Launching an Assessment Job
 1. Choose assessment parameters (Level 1–5, Risk 1–3, DBMS type, or specific techniques: Boolean, Error, UNION, Stacked, Time-based).
-2. Click **Start Scan** (or run `sqlphantom scan`).
-3. SQLPhantom automatically starts an isolated `sqlmapapi.py` subprocess on localhost, sets scan options via REST API, and begins polling for real-time telemetry.
-4. Scan progress and heuristic milestones are emitted over the internal `EventBus` and displayed in the UI.
+2. Configure optional upstream proxy (HTTP/SOCKS5) and request throttling delay.
+3. Click **Start Assessment**.
+4. SQLPhantom automatically starts an isolated `sqlmapapi.py` subprocess with credentials and dynamic port allocation, sets scan options via REST API, and begins streaming real-time telemetry.
+5. Scan progress and heuristic milestones are emitted over the internal `EventBus` and displayed in the UI.
 
-### Workflow 3: Analyzing Discovered Findings `[PLANNED]`
-1. As vulnerabilities are confirmed by the engine, they appear immediately in the **Findings** pane.
-2. Selecting a finding displays the affected parameter, injection technique, payload snippet, and reproducible cURL / sqlmap reproduction commands.
-3. Operators can mark findings as `Verified`, `False Positive`, or `Informational`, and add custom notes.
+### Workflow 3: Analyzing Discovered Findings
+1. Confirmed vulnerabilities appear in real time in the **Findings** pane.
+2. Selecting a finding displays the affected parameter, injection technique, payload snippet, and extracted evidence.
+3. Operators can mark findings as `ACTIVE`, `CONFIRMED`, `FALSE_POSITIVE`, or `VERIFIED_FIXED`, and add custom analyst notes saved to SQLite WAL storage.
+4. Switch to the **Defensive Remediation** tab to copy secure parameterized code snippets for your backend framework.
 
-### Workflow 4: Enumerating Databases & Extracting Data `[PLANNED]`
+### Workflow 4: Enumerating Databases & Extracting Data
 1. Navigate to the **Database Explorer** tab.
 2. Expand the database hierarchy to view tables and columns discovered during the scan.
-3. Select specific columns and specify a row limit (e.g. max 20 rows) to extract minimal necessary proof while adhering to data privacy policies.
-4. Export the extracted table directly to CSV, JSON, or SQLite.
+3. Select any table to inspect data dumps in the virtualized grid.
+4. Click **Export Table to CSV** to save records for reporting.
 
-### Workflow 5: Generating Assessment Reports `[PLANNED]`
-1. Open **Reports** → **Generate Report**.
-2. Select desired formats: **HTML** (self-contained interactive report with charts), **Markdown** (for Jira/GitHub issues), or **JSON** (for SIEM/vulnerability tracking).
-3. Toggle sensitive data masking (automatically replaces credentials, cookies, and tokens with `[REDACTED]`).
-4. Generate and save the report artifact.
+### Workflow 5: Generating Assessment Reports
+1. In the **Findings** pane, click **Export Report** (or choose HTML, Markdown, or JSON).
+2. All sensitive data (credentials, auth tokens, session cookies, API keys) are automatically scrubbed and replaced with `[REDACTED]`.
+3. HTML reports include executive metric summaries, the official SQLPhantom branding, vulnerability breakdowns, and OWASP remediation guidelines.
 
 ---
 

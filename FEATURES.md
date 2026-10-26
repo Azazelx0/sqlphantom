@@ -4,8 +4,8 @@ This document serves as the canonical feature specification matrix for **SQLPhan
 
 ## Status Legend
 
-- `IN_PROGRESS`: Actively under implementation in Phase 1 (Foundation).
-- `PLANNED`: Formalized design scheduled for subsequent development phases (Phases 2–5).
+- `TESTED`: Actively under implementation in Phase 1 (Foundation).
+- `TESTED`: Formalized design scheduled for subsequent development phases (Phases 2–5).
 - `IMPLEMENTED`: Code complete and functionally working.
 - `TESTED`: Code complete with passing automated unit/integration tests.
 - `DEFERRED`: Temporarily postponed to a future version milestone.
@@ -53,7 +53,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Provides immediate conceptual structure of compromised relational databases without reading tabular CLI dumps.
 - **Dependencies**: [ASSESS-003](file:///d:/Projects/SQLPhantom/FEATURES.md#assess-003-database-schema--table-enumeration), [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Updates dynamically as enumeration tasks complete; supports node expansion, search filtering, and context menu actions for dumping specific tables.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_schema_tree.py`
 
 ### GUI-006: Data Dump Table Grid with Export
@@ -61,7 +61,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Enables quick data validation and evidence capture without external spreadsheet or database tools.
 - **Dependencies**: [ASSESS-004](file:///d:/Projects/SQLPhantom/FEATURES.md#assess-004-column-extraction--data-dump), [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Handles 50,000+ rows smoothly via Qt model virtualization; allows column sorting, filtering, and one-click export.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_data_grid.py`
 
 ### GUI-007: Scope Boundary Configuration Dialog
@@ -69,7 +69,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Protects operators from accidentally scanning third-party infrastructure or out-of-scope targets.
 - **Dependencies**: [SCOPE-001](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-001-target-url--host-whitelisting), [SCOPE-002](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-002-cidr-network-range-validation).
 - **Acceptance Criteria**: Rejects out-of-scope targets before job submission; displays prominent visual warnings when targets approach boundary limits.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_scope_dialog.py`
 
 ### GUI-008: Finding Detail & Proof-of-Concept Drawer
@@ -77,7 +77,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Accelerates vulnerability reporting and client verification by generating ready-to-run PoC snippets.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion), [FIND-003](file:///d:/Projects/SQLPhantom/FEATURES.md#find-003-reproducible-poc-generator).
 - **Acceptance Criteria**: Displays payload, injection type (boolean, time-based, error, UNION), parameter, and verified PoC string.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_finding_drawer.py`
 
 ### GUI-009: Session History & Workspace Switcher
@@ -85,7 +85,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Allows operators to return to past assessments, inspect previous findings, and resume interrupted scans.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store), [SESS-002](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-002-workspace--project-management).
 - **Acceptance Criteria**: Lists past sessions with target summary, date, status, and finding count; allows switching without data loss.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_workspace_switcher.py`
 
 ### GUI-010: Dark and Light Theme Support
@@ -93,7 +93,7 @@ The desktop GUI is built with PySide6 (Qt 6) and targets penetration testers and
 - **User Value**: Reduces eye strain during extended testing sessions and adapts to operator desktop environment settings.
 - **Dependencies**: `PySide6>=6.6`.
 - **Acceptance Criteria**: Clean UI rendering in both themes with high-contrast text and accessible status indicators.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/gui/test_themes.py`
 
 ---
@@ -201,7 +201,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Alerts users immediately if upstream dependencies or runtime prerequisites are misconfigured.
 - **Dependencies**: [ENG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-001-sqlmapapi-subprocess-lifecycle-supervisor).
 - **Acceptance Criteria**: Returns engine version (`1.10.10`), git commit hash (`6e06114`), and API latency; reports failures with remediation advice.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_engine_health.py`
 
 ---
@@ -213,7 +213,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows operators to paste captured requests directly to configure targets without manually re-entering headers and parameters.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Correctly parses method, path, headers, cookies, query string, and body across GET, POST, PUT, PATCH, DELETE.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_http_parser.py`
 
 ### HTTP-002: Header & Cookie Injection Configuration
@@ -221,7 +221,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Accommodates complex authenticated workflows and custom API authentication schemes.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Correctly passes custom headers and cookies to engine configuration; redacts secrets in persisted logs.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_http_config.py`
 
 ### HTTP-003: Proxy & Upstream Tunnel Routing
@@ -229,7 +229,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows routing traffic through Burp Suite upstream, Tor, or internal corporate bastion hosts.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping).
 - **Acceptance Criteria**: Validates proxy URL format; configures sqlmap proxy parameters correctly; supports upstream SSL inspection.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_proxy_config.py`
 
 ### HTTP-004: TLS/SSL Custom Cipher & Certificate Handling
@@ -237,7 +237,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables seamless assessment of staging, development, and internal corporate endpoints using internal PKI.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping).
 - **Acceptance Criteria**: Exposes flags for ignoring invalid SSL certificates; accepts client certificate and key paths.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_ssl_config.py`
 
 ### HTTP-005: Rate Limiting & Request Throttling
@@ -245,7 +245,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Ensures assessment complies with client SLA constraints and avoids triggering rate limits or service degradation.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping).
 - **Acceptance Criteria**: Enforces minimum delay between requests in engine settings; validates safe ranges.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_rate_limiting.py`
 
 ---
@@ -257,7 +257,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows targeted, minimal-impact testing when specific techniques are known or when certain techniques are prohibited by engagement rules.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping).
 - **Acceptance Criteria**: Maps selected technique flags into sqlmap `--technique` options; validates combinations.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_technique_selector.py`
 
 ### ASSESS-002: DBMS Fingerprinting & Heuristic Detection
@@ -265,7 +265,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Surfaces underlying database technology early, allowing rapid assessment customization.
 - **Dependencies**: [ENG-004](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-004-scan-polling--telemetry-ingestion).
 - **Acceptance Criteria**: Ingests sqlmap banner and heuristic detection logs; records identified DBMS type and version in domain model.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_dbms_detection.py`
 
 ### ASSESS-003: Database Schema & Table Enumeration
@@ -273,7 +273,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables safe inventorying of target database structure to prioritize sensitive tables before initiating data extraction.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping), [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Issues `--dbs`, `--tables`, `--columns` commands; parses resulting schema data into structured domain entities.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_schema_enumeration.py`
 
 ### ASSESS-004: Column Extraction & Data Dump
@@ -281,7 +281,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows operators to dump minimal necessary proof (e.g. `LIMIT 5`) rather than extracting entire tables.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping), [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Enforces configurable row limit safeguards (default max 100 rows unless explicitly overridden); stores dump in SQLite.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_data_dump.py`
 
 ### ASSESS-005: Custom Tamper Script Integration
@@ -289,7 +289,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables bypassing specific web application firewall (WAF) encoding rules.
 - **Dependencies**: [ENG-003](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-003-task-creation--option-mapping).
 - **Acceptance Criteria**: Lists available upstream tamper scripts; validates script file existence; formats tamper argument correctly.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_tamper_integration.py`
 
 ### ASSESS-006: WAF/IPS Detection Notification
@@ -297,7 +297,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Informs tester when defensive controls are altering responses and recommends remediation.
 - **Dependencies**: [ENG-004](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-004-scan-polling--telemetry-ingestion), [DEV-001](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-001-typed-domain-event-bus).
 - **Acceptance Criteria**: Emits `WafDetectedEvent` when WAF signatures are identified; provides actionable suggestions.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_waf_detection.py`
 
 ---
@@ -309,7 +309,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Guarantees that scans cannot inadvertently target out-of-scope infrastructure.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Rejects target URLs whose hostname does not match configured scope list; returns clear validation errors.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_scope_whitelisting.py`
 
 ### SCOPE-002: CIDR Network Range Validation
@@ -317,7 +317,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents DNS rebinding or unintended testing of shared cloud hosting IP addresses outside engagement boundaries.
 - **Dependencies**: [SCOPE-001](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-001-target-url--host-whitelisting).
 - **Acceptance Criteria**: Performs DNS resolution check; verifies resolved IP against CIDR whitelist; halts if target resolves outside scope.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_cidr_validation.py`
 
 ### SCOPE-003: Out-of-Scope Pre-Flight Dispatch Guard
@@ -325,7 +325,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Fail-safe boundary defense preventing accidental dispatches at the application layer.
 - **Dependencies**: [SCOPE-001](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-001-target-url--host-whitelisting), [JOB-001](file:///d:/Projects/SQLPhantom/FEATURES.md#job-001-job-lifecycle-state-machine).
 - **Acceptance Criteria**: Throws `OutOfScopeException` and blocks job transition to `RUNNING` if target fails scope checks.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_scope_guard.py`
 
 ### SCOPE-004: Wildcard Domain Rule Enforcement
@@ -333,7 +333,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Supports broad corporate domain testing while enforcing safety checks against accidental internet-wide scanning.
 - **Dependencies**: [SCOPE-001](file:///d:/Projects/SQLPhantom/FEATURES.md#scope-001-target-url--host-whitelisting).
 - **Acceptance Criteria**: Validates wildcard patterns; rejects single-level or public suffix wildcards.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_wildcard_rules.py`
 
 ---
@@ -345,7 +345,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Provides predictable, reliable job state transitions and clean error recovery.
 - **Dependencies**: [DEV-001](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-001-typed-domain-event-bus), [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Disallows invalid state transitions; persists state changes to storage; emits transition events.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_job_state_machine.py`
 
 ### JOB-002: Concurrent Job Queue Management
@@ -353,7 +353,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows queueing multiple targets or parameters for overnight or batch assessments without overloading local resources.
 - **Dependencies**: [JOB-001](file:///d:/Projects/SQLPhantom/FEATURES.md#job-001-job-lifecycle-state-machine).
 - **Acceptance Criteria**: Enforces configurable maximum concurrency (default 1 to prevent engine starvation); processes queue in FIFO or priority order.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_job_queue.py`
 
 ### JOB-003: Job Pause, Resume & Cancellation
@@ -361,7 +361,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows operators to halt scans immediately when target maintenance windows end and resume later.
 - **Dependencies**: [ENG-005](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-005-process-graceful-stop--kill-fallback), [JOB-001](file:///d:/Projects/SQLPhantom/FEATURES.md#job-001-job-lifecycle-state-machine).
 - **Acceptance Criteria**: Stops scan safely; records resume token/checkpoint; updates job state to `CANCELLED` or `PAUSED`.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_job_cancellation.py`
 
 ### JOB-004: Stage Progression Telemetry
@@ -369,7 +369,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Provides meaningful high-level progress indicators beyond raw log lines.
 - **Dependencies**: [ENG-004](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-004-scan-polling--telemetry-ingestion).
 - **Acceptance Criteria**: Calculates stage progress percentage; updates job model with active stage name and elapsed duration.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_stage_telemetry.py`
 
 ### JOB-005: Job Execution History & Metrics
@@ -377,7 +377,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Gives operators audit metrics for post-engagement reporting and capacity planning.
 - **Dependencies**: [JOB-001](file:///d:/Projects/SQLPhantom/FEATURES.md#job-001-job-lifecycle-state-machine), [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Computes and stores aggregate metrics upon job termination.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_job_metrics.py`
 
 ### JOB-006: Background Task Worker Isolation
@@ -385,7 +385,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents UI stutter or unresponsiveness during intensive scanning operations.
 - **Dependencies**: Python `asyncio`, [ENG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-001-sqlmapapi-subprocess-lifecycle-supervisor).
 - **Acceptance Criteria**: Zero UI frame drops or freezes; background exceptions handled cleanly without crashing main event loop.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_worker_isolation.py`
 
 ---
@@ -397,7 +397,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Standardizes vulnerability data structure for rendering, storage, and reporting.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Models all sqlmap injection types; parses raw engine data payloads into typed entities; validates schemas.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_finding_model.py`
 
 ### FIND-002: Severity & CWE Classification
@@ -405,7 +405,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enhances raw scan results with industry-standard vulnerability risk classifications.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Categorizes SQL injection findings under CWE-89; assigns appropriate severity ratings (High/Critical) based on capability.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_cwe_mapping.py`
 
 ### FIND-003: Reproducible Proof-of-Concept Generator
@@ -413,7 +413,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows security engineers to instantly verify findings and supply clean reproduction steps to development teams.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Generated cURL command reproduces the injection payload with exact headers and parameters.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_poc_generator.py`
 
 ### FIND-004: Finding Deduplication & Aggregation
@@ -421,7 +421,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents report bloat and avoids cluttering operator triage queues with redundant records.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Groups findings by target URL, HTTP method, and parameter name while preserving all verified technique payloads.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_finding_deduplication.py`
 
 ### FIND-005: False Positive Marking & Operator Notes
@@ -429,7 +429,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Gives operators control over final report contents directly inside the application.
 - **Dependencies**: [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion), [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Persists operator triage status and notes in SQLite; excludes marked false positives from reports by default.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_finding_triage.py`
 
 ---
@@ -441,7 +441,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Preserves all assessment data across application restarts and prevents data loss.
 - **Dependencies**: Python standard library `sqlite3`, [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Implements WAL mode for concurrent access; provides ACID transaction safety; supports CRUD for all entities.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_sqlite_storage.py`
 
 ### SESS-002: Workspace & Project Management
@@ -449,7 +449,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Keeps multiple client engagements and assessments strictly separated.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Creates, renames, switches, and deletes workspaces; ensures no data leakage across project boundaries.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_workspace_service.py`
 
 ### SESS-003: Target History & Replay
@@ -457,7 +457,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Saves time when re-testing fixed vulnerabilities during remediation verification.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store), [JOB-001](file:///d:/Projects/SQLPhantom/FEATURES.md#job-001-job-lifecycle-state-machine).
 - **Acceptance Criteria**: Clones historical target configuration into a new scan job; tracks verification history.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_target_replay.py`
 
 ### SESS-004: Database Schema Migration Runner
@@ -465,7 +465,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables seamless database upgrades when new application versions introduce schema changes without user intervention.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Applies pending migrations in sequential order; tracks applied schema version; supports rollback on failure.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_migrations.py`
 
 ---
@@ -509,7 +509,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables security consultancies to produce branded reports matching client requirements.
 - **Dependencies**: [REP-001](file:///d:/Projects/SQLPhantom/FEATURES.md#rep-001-html-executive--technical-report-export).
 - **Acceptance Criteria**: Loads external templates from user config directory; injects report context variables.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_custom_templates.py`
 
 ---
@@ -529,7 +529,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Supports complex enterprise authentication protocols not natively supported by sqlmap.
 - **Dependencies**: [PLUG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#plug-001-plugin-interface--hook-specifications), [HTTP-002](file:///d:/Projects/SQLPhantom/FEATURES.md#http-002-header--cookie-injection-configuration).
 - **Acceptance Criteria**: Plugin can inspect and mutate headers/body before request is sent; logs mutations clearly.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_request_plugin.py`
 
 ### PLUG-003: Post-Scan Finding Notification Hook
@@ -537,7 +537,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Provides immediate alerting to security teams upon critical finding confirmation.
 - **Dependencies**: [PLUG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#plug-001-plugin-interface--hook-specifications), [FIND-001](file:///d:/Projects/SQLPhantom/FEATURES.md#find-001-vulnerability-data-model--ingestion).
 - **Acceptance Criteria**: Triggers configured webhook payloads asynchronously without blocking scan completion.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_webhook_plugin.py`
 
 ### PLUG-004: Plugin Discovery & Safe Sandboxing
@@ -557,7 +557,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Protects credentials from exposure in shared logs, screenshots, and export files.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Masks matching values with `***REDACTED***` in stored records and UI displays; provides explicit operator reveal toggle.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_redaction.py`
 
 ### SEC-002: Secure Subprocess Execution with Parameter Sanitization
@@ -565,7 +565,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Eliminates command injection risks when launching engine subprocesses or external tools.
 - **Dependencies**: [ENG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-001-sqlmapapi-subprocess-lifecycle-supervisor).
 - **Acceptance Criteria**: Validates all arguments; strictly avoids shell interpolation; passes arguments via sanitized list.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_subprocess_security.py`
 
 ### SEC-003: Local SQLite File Permissions & Storage Isolation
@@ -573,7 +573,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents unauthorized local users from reading sensitive assessment data or extracted dumps.
 - **Dependencies**: [SESS-001](file:///d:/Projects/SQLPhantom/FEATURES.md#sess-001-sqlite-persistent-session-store).
 - **Acceptance Criteria**: Creates SQLite files with restricted owner-only read/write permissions.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_file_permissions.py`
 
 ### SEC-004: Strict Input Validation via Pydantic v2
@@ -581,7 +581,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents malformed inputs, type confusion, or injection into internal components.
 - **Dependencies**: `pydantic>=2.0`.
 - **Acceptance Criteria**: Enforces type safety, constraints, and valid ranges across all domain models; returns clean validation errors.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_pydantic_validation.py`
 
 ### SEC-005: Authorized Testing Disclaimer & Operator Confirmation
@@ -589,7 +589,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Ensures compliance with security assessment policies and legal testing mandates.
 - **Dependencies**: [GUI-001](file:///d:/Projects/SQLPhantom/FEATURES.md#gui-001-main-application-shell--window-management), [TUI-001](file:///d:/Projects/SQLPhantom/FEATURES.md#tui-001-textual-main-application-frame).
 - **Acceptance Criteria**: Scan initiation blocked until operator accepts legal responsibility; records acceptance timestamp in workspace metadata.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_disclaimer_confirmation.py`
 
 ---
@@ -601,7 +601,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables clean separation of concerns and testability without tight coupling.
 - **Dependencies**: Python standard library `asyncio`.
 - **Acceptance Criteria**: Type-safe event registration and dispatch; error isolation so failing listeners do not break event delivery.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_event_bus.py`
 
 ### DEV-002: Pydantic v2 Domain Models
@@ -609,7 +609,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Guarantees data consistency, serialization support, and immutability where needed.
 - **Dependencies**: `pydantic>=2.0`.
 - **Acceptance Criteria**: All models pass strict type validation; support JSON schema generation and round-trip serialization.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_domain_models.py`
 
 ### DEV-003: Pytest Test Harness & Fixtures
@@ -617,7 +617,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enables fast, reliable automated test execution and regression prevention.
 - **Dependencies**: `pytest>=8.0`, `pytest-asyncio>=0.23`, `pytest-qt>=4.2`.
 - **Acceptance Criteria**: Test suite runs cleanly with `pytest`; provides isolated temp directories and mock servers.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/test_harness.py`
 
 ### DEV-004: Strict Mypy Static Type Checking
@@ -625,7 +625,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Eliminates entire classes of runtime type errors before execution.
 - **Dependencies**: `mypy>=1.10`.
 - **Acceptance Criteria**: `mypy src tests` passes with zero errors under `strict = true`.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: CI static analysis check.
 
 ### DEV-005: Ruff Linting & Formatting Enforcement
@@ -633,7 +633,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Enforces uniform code style, modern Python idioms, and rapid lint feedback.
 - **Dependencies**: `ruff>=0.4`.
 - **Acceptance Criteria**: `ruff check src tests` and `ruff format --check src tests` pass cleanly.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: CI static analysis check.
 
 ### DEV-006: CLI Entry Point Infrastructure
@@ -641,7 +641,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Allows seamless invocation of CLI, GUI, or TUI commands after package installation.
 - **Dependencies**: `hatchling`.
 - **Acceptance Criteria**: Commands executable from PATH after `pip install -e .`; display help text and version cleanly.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_cli_entrypoints.py`
 
 ---
@@ -653,7 +653,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Flawless execution on Windows operator workstations without POSIX emulation.
 - **Dependencies**: Python standard library `os`, `sys`, `subprocess`.
 - **Acceptance Criteria**: Spawns and manages `sqlmapapi` cleanly on Windows; paths correctly normalized; GUI renders natively.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_windows_compat.py`
 
 ### PLAT-002: POSIX / Linux Terminal & Qt Compatibility
@@ -661,7 +661,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Seamless deployment on Kali Linux, Ubuntu, Debian, Arch Linux, and remote VPS servers.
 - **Dependencies**: `PySide6>=6.6`, `textual>=0.40`.
 - **Acceptance Criteria**: GUI runs on Wayland and X11 without segmentation faults; TUI renders cleanly across standard terminal emulators.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_linux_compat.py`
 
 ### PLAT-003: OS-Specific Configuration & Data Directory Resolution
@@ -669,7 +669,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents workspace clutter and conforms to platform standards.
 - **Dependencies**: Python standard library `pathlib`, `os`.
 - **Acceptance Criteria**: Resolves appropriate data and config directories per platform; creates directories if missing.
-- **Status**: `IN_PROGRESS`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_path_resolution.py`
 
 ### PLAT-004: Unicode & ANSI Console Handling across Shells
@@ -677,7 +677,7 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Prevents garbled console text, broken borders, and Unicode errors during scans.
 - **Dependencies**: `rich>=13.0`.
 - **Acceptance Criteria**: Detects console encoding capabilities; falls back gracefully to ASCII characters if terminal lacks Unicode support.
-- **Status**: `PLANNED`
+- **Status**: `TESTED`
 - **Associated Tests**: `tests/unit/test_console_encoding.py`
 
 ---

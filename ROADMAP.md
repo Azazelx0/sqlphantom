@@ -26,12 +26,14 @@ gantt
 
 | Phase | Title | Focus Area | Status | Target Version |
 | :--- | :--- | :--- | :--- | :--- |
-| **Phase 0** | **Audit & Architecture Design** | Licensing baseline, upstream pin, repo structure, docs | `IN_PROGRESS` | `0.1.0-dev` |
-| **Phase 1** | **Foundation** | Domain models, SQLite storage, engine REST adapter, CLI | `IN_PROGRESS` | `0.1.0-dev` |
-| **Phase 2** | **TUI MVP** | Interactive terminal user interface (Textual/Rich) | `PLANNED` | `0.2.0-alpha` |
-| **Phase 3** | **GUI MVP** | PySide6 desktop interface (`SQLPhantom — sqlmap Enhanced`) | `PLANNED` | `0.3.0-alpha` |
-| **Phase 4** | **Reports & Plugins** | Multi-format reporting, data redaction, plugin hooks | `PLANNED` | `0.4.0-beta` |
-| **Phase 5** | **Hardening & Packaging** | Standalone binaries, lab regression suite, v1.0 release | `PLANNED` | `1.0.0` |
+| **Phase 0** | **Audit & Architecture Design** | Licensing baseline, upstream pin, repo structure, docs | `COMPLETED` | `0.1.0-dev` |
+| **Phase 1** | **Foundation** | Domain models, SQLite storage, engine REST adapter, CLI | `COMPLETED` | `0.1.0-dev` |
+| **Phase 2** | **TUI MVP** | Interactive terminal user interface (Textual/Rich) | `COMPLETED` | `0.2.0-alpha` |
+| **Phase 3** | **GUI MVP** | PySide6 desktop interface (`SQLPhantom — sqlmap Enhanced`) | `COMPLETED` | `0.3.0-alpha` |
+| **Phase 4** | **Reports & Plugins** | Multi-format reporting, data redaction, plugin hooks | `COMPLETED` | `0.4.0-beta` |
+| **Phase 5** | **Engine Daemon & Hardening** | Subprocess REST supervisor, client, engine adapter | `COMPLETED` | `0.5.0-beta` |
+| **Phase 6** | **Enterprise Workstation** | Schema explorer, drift diffing, remediation, branding | `COMPLETED` | `0.6.0-beta` |
+| **Phase 7** | **Static Typing & Packaging** | 100% strict Mypy, multi-size icon, PyInstaller exe | `COMPLETED` | `1.0.0` |
 
 ---
 
