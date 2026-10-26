@@ -49,4 +49,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[0.1.0-dev]: https://github.com/sqlphantom/sqlphantom/releases/tag/v0.1.0-dev
+[0.1.0-dev]: https://github.com/Azazelx0/sqlphantom/releases/tag/v0.1.0-dev

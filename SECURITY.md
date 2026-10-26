@@ -9,7 +9,7 @@ The SQLPhantom project takes software security, responsible disclosure, and defe
 If you discover a security vulnerability in SQLPhantom (such as a command injection vector, unauthorized file access, privilege escalation, or scope guardrail bypass), please report it responsibly.
 
 ### Disclosure Channels
-- **GitHub Security Advisory**: Submit a private advisory via [GitHub Security Advisories](https://github.com/sqlphantom/sqlphantom/security/advisories/new).
+- **GitHub Security Advisory**: Submit a private advisory via [GitHub Security Advisories](https://github.com/Azazelx0/sqlphantom/security/advisories/new).
 - **Security Email**: If you cannot use GitHub Advisories, email the maintainers directly at:
   ```
   security@sqlphantom.org

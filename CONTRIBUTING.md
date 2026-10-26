@@ -16,7 +16,7 @@ As an open-source security tool built on upstream sqlmap, we maintain high stand
 
 1. **Fork and clone the repository**:
    ```bash
-   git clone https://github.com/sqlphantom/sqlphantom.git
+   git clone https://github.com/Azazelx0/sqlphantom.git
    cd sqlphantom
    ```
 

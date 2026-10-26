@@ -53,10 +53,10 @@ sqlphantom-gui = "sqlphantom.cli:gui"
 sqlphantom-tui = "sqlphantom.cli:tui"
 
 [project.urls]
-Homepage = "https://github.com/sqlphantom/sqlphantom"
-Repository = "https://github.com/sqlphantom/sqlphantom"
-Documentation = "https://github.com/sqlphantom/sqlphantom/blob/main/USAGE.md"
-Issues = "https://github.com/sqlphantom/sqlphantom/issues"
+Homepage = "https://github.com/Azazelx0/sqlphantom"
+Repository = "https://github.com/Azazelx0/sqlphantom"
+Documentation = "https://github.com/Azazelx0/sqlphantom/blob/main/USAGE.md"
+Issues = "https://github.com/Azazelx0/sqlphantom/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sqlphantom"]

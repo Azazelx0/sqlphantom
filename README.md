@@ -62,7 +62,7 @@ Clone the repository and install SQLPhantom in editable mode within a dedicated 
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/sqlphantom/sqlphantom.git
+git clone https://github.com/Azazelx0/sqlphantom.git
 cd sqlphantom
 
 # 2. Create and activate a Python 3.11+ virtual environment

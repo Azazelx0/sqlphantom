@@ -44,7 +44,7 @@ Welcome to the **SQLPhantom** user manual. This document guides you through syst
 Clone the SQLPhantom repository to your local system:
 
 ```bash
-git clone https://github.com/sqlphantom/sqlphantom.git
+git clone https://github.com/Azazelx0/sqlphantom.git
 cd sqlphantom
 ```
 
