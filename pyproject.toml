@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sqlphantom"
+version = "0.1.0"
+description = "A GUI-enhanced, modernized fork of sqlmap with an interactive TUI."
+readme = "README.md"
+license = "GPL-2.0-or-later"
+requires-python = ">=3.11"
+authors = [
+    { name = "SQLPhantom Contributors" },
+]
+keywords = ["sqlmap", "sql-injection", "security", "penetration-testing", "gui"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "PySide6>=6.6",
+    "textual>=0.40",
+    "pydantic>=2.0",
+    "rich>=13.0",
+    "httpx>=0.25",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-qt>=4.2",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+sqlphantom = "sqlphantom.cli:main"
+sqlphantom-gui = "sqlphantom.cli:gui"
+sqlphantom-tui = "sqlphantom.cli:tui"
+
+[project.urls]
+Homepage = "https://github.com/sqlphantom/sqlphantom"
+Repository = "https://github.com/sqlphantom/sqlphantom"
+Documentation = "https://github.com/sqlphantom/sqlphantom/blob/main/USAGE.md"
+Issues = "https://github.com/sqlphantom/sqlphantom/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sqlphantom"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true

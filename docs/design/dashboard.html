@@ -1,0 +1,690 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SQLPhantom â€” Penetration Testing Workstation</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Public+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-[#0B0F19] text-slate-100 font-body antialiased min-h-screen selection:bg-violet-600/30 selection:text-violet-200">
+<!-- LEFT SIDEBAR (SideNavBar Shared Component) -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-slate-900 border-r border-slate-700/50 shadow-2xl flex flex-col justify-between p-3 select-none">
+<!-- Top Branding & Navigation -->
+<div class="flex flex-col gap-4">
+<!-- Workspace Brand Header -->
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-950/40 border border-slate-800/80">
+<div class="h-9 w-9 rounded-lg bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="shield">shield</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-black text-slate-100 tracking-wider text-base uppercase">SQLPhantom</span>
+<span class="inline-block w-2 h-2 rounded-full bg-violet-500 animate-pulse"></span>
+</div>
+<p class="text-xs text-slate-400 font-normal truncate">v4.2.0 â€¢ sqlmap Enhanced</p>
+</div>
+</div>
+<!-- Quick Action CTA -->
+<button class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-headline text-xs font-semibold uppercase tracking-wider shadow-lg shadow-violet-900/30 transition-all active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-base" data-icon="add_moderator">add_moderator</span>
+<span>New Assessment</span>
+</button>
+<!-- Primary Navigation Links (Derived from Shared Component JSON) -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1 mt-1 font-display font-medium text-sm tracking-tight">
+<!-- Tab 1: Dashboard (ACTIVE MATCH) -->
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-600/15 text-violet-400 font-semibold border-l-2 border-violet-500 hover:bg-slate-800 hover:text-slate-100 transition-colors duration-150 active:scale-[0.99]" href="#dashboard">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Tab 2: Projects & Targets -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#projects">
+<span class="material-symbols-outlined text-xl" data-icon="dataset">dataset</span>
+<span>Projects &amp; Targets</span>
+</a>
+<!-- Tab 3: New Assessment -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#assessment">
+<span class="material-symbols-outlined text-xl" data-icon="add_moderator">add_moderator</span>
+<span>New Assessment</span>
+</a>
+<!-- Tab 4: Request Editor -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#request-editor">
+<span class="material-symbols-outlined text-xl" data-icon="code">code</span>
+<span>Request Editor</span>
+</a>
+<!-- Tab 5: Live Monitor -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#live-monitor">
+<span class="material-symbols-outlined text-xl" data-icon="monitor_heart">monitor_heart</span>
+<span class="flex-1">Live Monitor</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700/60">IDLE</span>
+</a>
+<!-- Tab 6: Findings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#findings">
+<span class="material-symbols-outlined text-xl" data-icon="bug_report">bug_report</span>
+<span class="flex-1">Findings</span>
+<span class="inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-mono font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30">8</span>
+</a>
+<!-- Tab 7: Sessions -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#sessions">
+<span class="material-symbols-outlined text-xl" data-icon="history">history</span>
+<span>Sessions</span>
+</a>
+<!-- Tab 8: Reports -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#reports">
+<span class="material-symbols-outlined text-xl" data-icon="description">description</span>
+<span>Reports</span>
+</a>
+<!-- Tab 9: Plugins -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#plugins">
+<span class="material-symbols-outlined text-xl" data-icon="extension">extension</span>
+<span>Plugins</span>
+</a>
+<!-- Tab 10: Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#settings">
+<span class="material-symbols-outlined text-xl" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<!-- Tab 11: About -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150 active:scale-[0.99]" href="#about">
+<span class="material-symbols-outlined text-xl" data-icon="info">info</span>
+<span>About</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Utility Footer Area -->
+<div class="pt-3 border-t border-slate-700/50 flex flex-col gap-2">
+<!-- Engine IPC State indicator -->
+<div class="px-3 py-2 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span>
+<span class="font-mono text-[11px] text-slate-300">sqlmap API :8775</span>
+</div>
+<span class="text-[10px] text-emerald-400 font-mono font-medium">ONLINE</span>
+</div>
+<!-- Footer Action Links -->
+<div class="grid grid-cols-2 gap-1 text-xs">
+<a class="flex items-center gap-2 px-2.5 py-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors" href="#docs">
+<span class="material-symbols-outlined text-base" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-2 px-2.5 py-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors" href="#terminal">
+<span class="material-symbols-outlined text-base" data-icon="terminal">terminal</span>
+<span>Terminal</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TOP APP BAR (TopNavBar Shared Component) -->
+<header class="sticky top-0 right-0 h-14 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-700/50 shadow-sm ml-64">
+<div class="flex items-center justify-between px-6 h-full gap-4">
+<!-- Left: Target Quick Input Bar -->
+<div class="flex items-center gap-3 flex-1 max-w-2xl">
+<div class="relative flex-1 group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="target">crisis_alert</span>
+</div>
+<input class="w-full bg-[#111827] border border-slate-700/70 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-lg pl-9 pr-24 py-1.5 text-xs font-mono text-slate-200 placeholder-slate-500 transition-all outline-none" placeholder="Quick Target URL (e.g., https://target.host/item.php?id=1337)" type="text" value="https://api.acme.internal/v1/auth?user_id=8921"/>
+<button class="absolute right-1 top-1 bottom-1 px-3 bg-violet-600 hover:bg-violet-500 text-white rounded text-xs font-medium flex items-center gap-1.5 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="rocket_launch">rocket_launch</span>
+<span>Launch Scan</span>
+</button>
+</div>
+<!-- Secondary Engine Quick Links -->
+<nav class="hidden xl:flex items-center gap-4 font-headline text-xs font-semibold uppercase tracking-wider text-slate-400 pl-2">
+<a class="text-violet-400 font-bold border-b-2 border-violet-500 pb-1" href="#engines">Engines</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#payloads">Payloads</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#proxies">Proxies</a>
+</nav>
+</div>
+<!-- Right: Workstation Status & Operator Controls -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- Engine Status Badge Pill -->
+<div class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 text-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-slate-400">Engine:</span>
+<span class="font-mono font-medium text-emerald-400">Idle (Ready)</span>
+</div>
+<!-- Active Jobs Counter Pill -->
+<div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/50 border border-slate-700/60 text-xs font-mono">
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="memory">memory</span>
+<span class="text-slate-300">0 Active Jobs</span>
+</div>
+<div class="h-4 w-px bg-slate-700/60 mx-1"></div>
+<!-- Stop Secondary Action -->
+<button class="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 border border-rose-900/40 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="stop_circle">stop_circle</span>
+<span>Stop All</span>
+</button>
+<!-- Notification & Settings Icons -->
+<div class="flex items-center gap-1 text-slate-400">
+<button aria-label="Notifications" class="p-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-200 transition-colors active:scale-95 relative" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-violet-500"></span>
+</button>
+<button aria-label="System Fine Tuning" class="p-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-200 transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="tune">tune</span>
+</button>
+<!-- Operator User Avatar -->
+<div class="flex items-center gap-2 pl-2">
+<div class="h-7 w-7 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-500 p-[1px] flex items-center justify-center">
+<div class="h-full w-full rounded-full bg-[#111827] flex items-center justify-center overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Digital portrait avatar of a cybersecurity operator with dark technical visor glasses and tactical high-collar gear illuminated by electric violet cybernetic workstation screens in a high contrast dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdbJf9KceOFis5JeoV0V_NcZATmMnhwT_B1njbYULkOPcuWmUTGtBrvrkL2DMYRpttdWKahzqpIPJs-dT-jMUNA3qsIP966pPJu57bhSAGR1OmoZA1ro0ARlgh2CzbDlx9Pmxk04l5PAseU_VOcitxoMaA9_j13GngLB9SIW3qDJR2cMElc5HjQPesWaR0TJ_5j4S06eu7A8BnvAlgCKyjjkTlXA_bjXqnJtUSyR1UcHAWNAnP-LIPkpFHuI31tp_KJeRkDdK7l0M"/>
+</div>
+</div>
+<div class="hidden xl:block text-left">
+<p class="text-xs font-medium text-slate-200 leading-tight">sec_operator_01</p>
+<p class="text-[10px] font-mono text-violet-400 leading-none">ROOT â€¢ LEVEL 5</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN WORKSPACE CONTENT -->
+<main class="ml-64 p-6 bg-[#0B0F19] min-h-[calc(100vh-3.5rem)] space-y-6">
+<!-- 1. Header Welcome Banner / Workstation Status -->
+<section class="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#111827] via-[#1E293B] to-[#111827] border border-slate-700/60 p-6 shadow-xl">
+<!-- Glow ambient backdrop -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-10 -bottom-10 w-60 h-60 bg-blue-600/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30">Workstation Ready</span>
+<span class="text-xs text-slate-400 font-mono">Build 2025.1-PRO â€¢ Sandbox Isolated</span>
+</div>
+<h1 class="text-2xl font-bold font-headline text-slate-50 tracking-tight">SQLPhantom Security Console</h1>
+<p class="text-sm text-slate-400 mt-1 max-w-xl">
+            Automated blind, time-based, union query injection probing with real-time heuristic WAF bypass evaluation and database takeover modules.
+          </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-headline text-xs font-semibold uppercase tracking-wider shadow-lg shadow-violet-900/30 transition-all flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-base" data-icon="add_moderator">add_moderator</span>
+<span>New Assessment</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-headline text-xs font-semibold tracking-wider transition-all flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-base text-slate-400" data-icon="vpn_lock">vpn_lock</span>
+<span>Configure Proxy</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 2. Quick Start Action Cards (3-column Bento Grid) -->
+<section>
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-xs font-headline font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-violet-400" data-icon="flash_on">flash_on</span>
+          Assessment Launchpads
+        </h2>
+<span class="text-xs text-slate-500">Pick an entry vector to initiate payload verification</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Card 1: New Assessment Wizard -->
+<div class="group relative rounded-xl bg-[#111827] border border-slate-800 hover:border-violet-500/50 p-5 transition-all duration-200 hover:shadow-lg hover:shadow-violet-950/20 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="w-10 h-10 rounded-lg bg-violet-600/15 border border-violet-500/30 flex items-center justify-center text-violet-400 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="auto_fix_high">auto_fix_high</span>
+</div>
+<div>
+<h3 class="font-headline font-semibold text-base text-slate-100 group-hover:text-violet-300 transition-colors">New Assessment Wizard</h3>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Configure target parameters, automated injection levels (1â€“5), risk vectors, DBMS fingerprints, and heuristic tamper combinations.
+              </p>
+</div>
+<!-- Meta tags -->
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Risk: 1-3</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Level: 1-5</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Auto-Bypass</span>
+</div>
+</div>
+<button class="mt-5 w-full py-2 px-3 rounded-lg bg-slate-800 group-hover:bg-violet-600 text-slate-200 group-hover:text-white font-medium text-xs flex items-center justify-center gap-2 border border-slate-700/70 group-hover:border-violet-500 transition-all" type="button">
+<span>Launch Wizard</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Card 2: Import Raw HTTP Request -->
+<div class="group relative rounded-xl bg-[#111827] border border-slate-800 hover:border-violet-500/50 p-5 transition-all duration-200 hover:shadow-lg hover:shadow-violet-950/20 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="w-10 h-10 rounded-lg bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="file_upload">file_upload</span>
+</div>
+<div>
+<h3 class="font-headline font-semibold text-base text-slate-100 group-hover:text-blue-300 transition-colors">Import Raw HTTP Request</h3>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Paste or upload Burp Suite or OWASP ZAP raw <code class="text-slate-300 font-mono">.req</code> files for direct automated parameter exploitation and header fuzzing.
+              </p>
+</div>
+<!-- Meta tags -->
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Burp Suite .req</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Postman JSON</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">cURL syntax</span>
+</div>
+</div>
+<button class="mt-5 w-full py-2 px-3 rounded-lg bg-slate-800 group-hover:bg-blue-600 text-slate-200 group-hover:text-white font-medium text-xs flex items-center justify-center gap-2 border border-slate-700/70 group-hover:border-blue-500 transition-all" type="button">
+<span>Import Request</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="file_open">file_open</span>
+</button>
+</div>
+<!-- Card 3: Open Session -->
+<div class="group relative rounded-xl bg-[#111827] border border-slate-800 hover:border-violet-500/50 p-5 transition-all duration-200 hover:shadow-lg hover:shadow-violet-950/20 flex flex-col justify-between">
+<div class="space-y-3">
+<div class="w-10 h-10 rounded-lg bg-emerald-600/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="folder_open">folder_open</span>
+</div>
+<div>
+<h3 class="font-headline font-semibold text-base text-slate-100 group-hover:text-emerald-300 transition-colors">Open Session</h3>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Resume previously saved assessment sessions, inspect offline SQLite dumps, and review cached injection responses and evidence logs.
+              </p>
+</div>
+<!-- Meta tags -->
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">Session Caches: 18</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800/80 text-slate-300 border border-slate-700/60">SQLite State</span>
+</div>
+</div>
+<button class="mt-5 w-full py-2 px-3 rounded-lg bg-slate-800 group-hover:bg-emerald-600 text-slate-200 group-hover:text-white font-medium text-xs flex items-center justify-center gap-2 border border-slate-700/70 group-hover:border-emerald-500 transition-all" type="button">
+<span>Browse Sessions</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform" data-icon="storage">storage</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 3. Stat KPI Metric Cards (4-column grid) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI 1: Total Scans -->
+<div class="rounded-xl bg-[#111827] border border-slate-800 p-4 relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-400">
+<span class="text-xs font-headline font-medium uppercase tracking-wider">Total Scans</span>
+<span class="material-symbols-outlined text-lg text-slate-500" data-icon="radar">radar</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold font-headline text-slate-100">12</span>
+<span class="text-xs font-mono text-emerald-400 flex items-center">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+            +2 this week
+          </span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Across 4 defined scope targets</p>
+</div>
+<!-- KPI 2: Vulnerabilities Discovered -->
+<div class="rounded-xl bg-[#111827] border border-slate-800 p-4 relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-400">
+<span class="text-xs font-headline font-medium uppercase tracking-wider">Vulnerabilities Discovered</span>
+<span class="material-symbols-outlined text-lg text-violet-400" data-icon="bug_report">bug_report</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold font-headline text-slate-100">34</span>
+<span class="text-[10px] font-mono text-violet-400">6 DB instances identified</span>
+</div>
+<div class="text-[11px] text-slate-400 mt-1 truncate font-mono">
+          Boolean-based, Time-based, UNION query
+        </div>
+</div>
+<!-- KPI 3: Critical/High Findings -->
+<div class="rounded-xl bg-[#111827] border border-rose-900/40 p-4 relative overflow-hidden bg-gradient-to-br from-[#111827] to-rose-950/10">
+<div class="flex items-center justify-between text-slate-400">
+<span class="text-xs font-headline font-medium uppercase tracking-wider text-rose-300">Critical / High Findings</span>
+<span class="material-symbols-outlined text-lg text-rose-400" data-icon="warning">warning</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold font-headline text-rose-400">8</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            IMMEDIATE ACTION
+          </span>
+</div>
+<p class="text-[11px] text-slate-400 mt-1">DBA privs &amp; raw file reads verified</p>
+</div>
+<!-- KPI 4: Active Workers -->
+<div class="rounded-xl bg-[#111827] border border-slate-800 p-4 relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-400">
+<span class="text-xs font-headline font-medium uppercase tracking-wider">Active Workers</span>
+<span class="material-symbols-outlined text-lg text-blue-400" data-icon="terminal">terminal</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-bold font-headline text-slate-100">0</span>
+<span class="text-xs font-mono text-slate-400">/ 8 Thread limit</span>
+</div>
+<p class="text-[11px] text-emerald-400 mt-1 font-mono flex items-center gap-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Ready for dispatch
+        </p>
+</div>
+</section>
+<!-- 4. Main 2-Column Layout (8 cols Table + 4 cols Telemetry Panel) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Recent Projects Table (8 cols) -->
+<div class="lg:col-span-8 rounded-xl bg-[#111827] border border-slate-800 flex flex-col shadow-lg">
+<!-- Table Header & Controls -->
+<div class="p-4 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+<div>
+<h2 class="font-headline font-bold text-sm text-slate-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-violet-400 text-lg" data-icon="table_chart">table_chart</span>
+              Recent Projects &amp; Assessment Targets
+            </h2>
+<p class="text-xs text-slate-400 mt-0.5">Live targets inspected with sqlmap heuristic engines and tamper pipelines</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition-colors border border-slate-700" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+<span>Filter Scope</span>
+</button>
+<button class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition-colors border border-slate-700" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+</button>
+</div>
+</div>
+<!-- Table View -->
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="border-b border-slate-800 text-[11px] font-headline uppercase tracking-wider text-slate-400 bg-slate-900/60">
+<th class="py-3 px-4 font-semibold">Project Name</th>
+<th class="py-3 px-4 font-semibold">Target URL &amp; Parameter</th>
+<th class="py-3 px-4 font-semibold">Vulnerability Status</th>
+<th class="py-3 px-4 font-semibold">Last Scan</th>
+<th class="py-3 px-4 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/60 text-slate-300 font-sans">
+<!-- Row 1: Acme Corp Auth API -->
+<tr class="hover:bg-slate-800/30 transition-colors group">
+<td class="py-3.5 px-4 font-medium text-slate-200">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span class="font-headline font-semibold">Acme Corp Auth API</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono">ID: PRJ-9902 â€¢ PostgreSQL 15.2</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px]">
+<div class="text-slate-300 truncate max-w-xs" title="https://api.acme.internal/v1/auth?user_id=">
+                    https://api.acme.internal/v1/auth?user_id=
+                  </div>
+<span class="text-violet-400 text-[10px]">Parameter: <span class="font-bold underline">user_id</span> [GET]</span>
+</td>
+<td class="py-3.5 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+<span>3 Critical (UNION, Error-based)</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                  12 mins ago
+                  <span class="block text-[10px] text-slate-500">Duration: 4m 12s</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="View Assessment Details" type="button">
+<span class="material-symbols-outlined text-base" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-violet-400 hover:text-violet-300 transition-colors" title="Rerun Injection Pipeline" type="button">
+<span class="material-symbols-outlined text-base" data-icon="replay">replay</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="Export Security Report" type="button">
+<span class="material-symbols-outlined text-base" data-icon="download">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Fintech Portal Staging -->
+<tr class="hover:bg-slate-800/30 transition-colors group">
+<td class="py-3.5 px-4 font-medium text-slate-200">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="font-headline font-semibold">Fintech Portal Staging</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono">ID: PRJ-9884 â€¢ MySQL 8.0</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px]">
+<div class="text-slate-300 truncate max-w-xs" title="https://staging-pay.vault.io/transfers">
+                    https://staging-pay.vault.io/transfers
+                  </div>
+<span class="text-slate-400 text-[10px]">Parameter: <span class="font-bold">x-account-token</span> [Header]</span>
+</td>
+<td class="py-3.5 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span>Secure / Sanitized</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                  3 hours ago
+                  <span class="block text-[10px] text-slate-500">Duration: 18m 40s</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="View Assessment Details" type="button">
+<span class="material-symbols-outlined text-base" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-violet-400 hover:text-violet-300 transition-colors" title="Rerun Injection Pipeline" type="button">
+<span class="material-symbols-outlined text-base" data-icon="replay">replay</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="Export Security Report" type="button">
+<span class="material-symbols-outlined text-base" data-icon="download">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Legacy CRM Gateway -->
+<tr class="hover:bg-slate-800/30 transition-colors group">
+<td class="py-3.5 px-4 font-medium text-slate-200">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-400"></span>
+<span class="font-headline font-semibold">Legacy CRM Gateway</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono">ID: PRJ-9710 â€¢ Oracle 19c XE</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px]">
+<div class="text-slate-300 truncate max-w-xs" title="http://10.14.0.82/crm/reports.php">
+                    http://10.14.0.82/crm/reports.php
+                  </div>
+<span class="text-amber-400 text-[10px]">Parameter: <span class="font-bold underline">dept_id</span> [POST]</span>
+</td>
+<td class="py-3.5 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span>1 High (Time-based Blind)</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                  Yesterday, 18:22
+                  <span class="block text-[10px] text-slate-500">Duration: 8m 04s</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="View Assessment Details" type="button">
+<span class="material-symbols-outlined text-base" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-violet-400 hover:text-violet-300 transition-colors" title="Rerun Injection Pipeline" type="button">
+<span class="material-symbols-outlined text-base" data-icon="replay">replay</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="Export Security Report" type="button">
+<span class="material-symbols-outlined text-base" data-icon="download">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: OAuth Broker Endpoint -->
+<tr class="hover:bg-slate-800/30 transition-colors group">
+<td class="py-3.5 px-4 font-medium text-slate-200">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span class="font-headline font-semibold">SSO Identity Provider</span>
+</div>
+<span class="text-[10px] text-slate-500 font-mono">ID: PRJ-9642 â€¢ Microsoft SQL Server 2022</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px]">
+<div class="text-slate-300 truncate max-w-xs" title="https://sso.corp-mesh.net/oauth/v2/token">
+                    https://sso.corp-mesh.net/oauth/v2/token
+                  </div>
+<span class="text-rose-400 text-[10px]">Parameter: <span class="font-bold underline">client_id</span> [POST JSON]</span>
+</td>
+<td class="py-3.5 px-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+<span>2 Critical (Stacked Queries, xp_cmdshell)</span>
+</div>
+</td>
+<td class="py-3.5 px-4 font-mono text-[11px] text-slate-400">
+                  3 days ago
+                  <span class="block text-[10px] text-slate-500">Duration: 11m 15s</span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="View Assessment Details" type="button">
+<span class="material-symbols-outlined text-base" data-icon="visibility">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-violet-400 hover:text-violet-300 transition-colors" title="Rerun Injection Pipeline" type="button">
+<span class="material-symbols-outlined text-base" data-icon="replay">replay</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors" title="Export Security Report" type="button">
+<span class="material-symbols-outlined text-base" data-icon="download">download</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="p-3 border-t border-slate-800 bg-slate-900/40 flex items-center justify-between text-xs text-slate-400">
+<span class="font-mono text-[11px]">Showing 4 of 12 assessments</span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700 disabled:opacity-50" disabled="" type="button">Previous</button>
+<span class="px-2 font-mono text-violet-400 font-bold">1</span>
+<button class="px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-slate-100 hover:bg-slate-700" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Active Engine Telemetry Panel (4 cols) -->
+<div class="lg:col-span-4 rounded-xl bg-[#111827] border border-slate-800 p-5 flex flex-col justify-between space-y-5 shadow-lg">
+<div class="space-y-4">
+<!-- Panel Header -->
+<div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-xl" data-icon="developer_board">developer_board</span>
+<h2 class="font-headline font-bold text-sm text-slate-100">Engine Telemetry</h2>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">LOCKED &amp; READY</span>
+</div>
+<!-- Metric Item 1: REST API Adapter -->
+<div class="space-y-1">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">sqlmap REST API Adapter</span>
+<span class="font-mono text-emerald-400 font-semibold text-[11px] flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Connected
+              </span>
+</div>
+<div class="p-2 rounded bg-slate-900 border border-slate-800 font-mono text-xs text-slate-300 flex items-center justify-between">
+<span>tcp://127.0.0.1:8775</span>
+<span class="text-slate-500 text-[10px]">IPC v1 (JSON)</span>
+</div>
+</div>
+<!-- Metric Item 2: Engine Version Stack -->
+<div class="space-y-1">
+<span class="text-xs text-slate-400">Engine Core &amp; Binaries</span>
+<div class="p-2 rounded bg-slate-900 border border-slate-800 text-xs font-mono space-y-0.5">
+<p class="text-violet-300 text-[11px] font-medium">sqlmap v1.8.4#stable</p>
+<p class="text-slate-400 text-[10px]">SQLPhantom UI Engine v4.2.0-enhanced</p>
+</div>
+</div>
+<!-- Metric Item 3: Scope Enforcement -->
+<div class="space-y-1">
+<span class="text-xs text-slate-400">Scope Restriction Engine</span>
+<div class="p-2 rounded bg-slate-900 border border-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-base" data-icon="verified_user">verified_user</span>
+<div class="min-w-0">
+<p class="text-xs font-medium text-slate-200">Strict In-Scope Wildcards</p>
+<p class="text-[10px] font-mono text-slate-400 truncate">*.internal, *.vault.io, 10.14.0.*</p>
+</div>
+</div>
+</div>
+<!-- Metric Item 4: Active Tor / SOCKS5 Proxy -->
+<div class="space-y-1">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Tor / SOCKS5 Egress Tunnel</span>
+<span class="font-mono text-xs text-violet-400">48ms Latency</span>
+</div>
+<div class="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between text-xs font-mono">
+<span class="text-slate-300">socks5://127.0.0.1:9050</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">Circuits: 3</span>
+</div>
+</div>
+<!-- Metric Item 5: Tamper Scripts Loaded -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-xs">
+<span class="text-slate-400">Tamper Scripts Loaded</span>
+<span class="text-[11px] font-mono text-violet-400 font-bold">4 Active</span>
+</div>
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-600/20 text-violet-300 border border-violet-500/40">space2comment</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-600/20 text-violet-300 border border-violet-500/40">between</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-600/20 text-violet-300 border border-violet-500/40">charencode</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-600/20 text-violet-300 border border-violet-500/40">randomcase</span>
+</div>
+</div>
+</div>
+<!-- Real-Time Log Heartbeat Stream Snippet -->
+<div class="space-y-1.5 pt-2 border-t border-slate-800">
+<div class="flex items-center justify-between text-xs text-slate-400">
+<span class="font-headline font-semibold text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-violet-400" data-icon="terminal">terminal</span>
+              Heartbeat Log Stream
+            </span>
+<span class="text-[10px] font-mono text-slate-500">Live (IPC sync)</span>
+</div>
+<div class="bg-black/80 rounded-lg p-3 border border-slate-800/90 font-mono text-[10px] leading-relaxed text-slate-300 h-28 overflow-y-auto space-y-1 scrollbar-thin">
+<div class="text-slate-500">[14:10:02] [IPC] Heartbeat ping ACK from :8775 in 1.4ms</div>
+<div class="text-slate-400">[14:10:08] [SCOPE] In-scope regex filters verified (3 domains, 1 subnet)</div>
+<div class="text-violet-400">[14:10:14] [TAMPER] space2comment &amp; randomcase compiled to AST</div>
+<div class="text-emerald-400">[14:10:20] [READY] Thread pool initialized (8 workers standing by)</div>
+<div class="text-slate-400 flex items-center gap-1">
+<span class="text-violet-400 font-bold">&gt;</span>
+<span>Listening for incoming task payload or cURL injection...</span>
+<span class="inline-block w-1.5 h-3 bg-violet-500 animate-pulse"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

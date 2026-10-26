@@ -1,0 +1,738 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SQLPhantom â€” Findings &amp; Evidence Viewer</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#dfbcff",
+            "on-surface": "#dfe2f1",
+            "on-primary-fixed": "#25005a",
+            "surface-container-highest": "#313540",
+            "on-primary": "#3f008e",
+            "inverse-primary": "#732ee4",
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "tertiary": "#7bd0ff",
+            "outline-variant": "#4a4455",
+            "on-tertiary-container": "#caeaff",
+            "on-primary-container": "#ede0ff",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#0a0e18",
+            "surface-variant": "#313540",
+            "inverse-on-surface": "#2c303b",
+            "secondary-fixed": "#f0dbff",
+            "surface-dim": "#0f131d",
+            "primary-fixed": "#eaddff",
+            "surface-container-low": "#171b26",
+            "primary-fixed-dim": "#d2bbff",
+            "primary": "#d2bbff",
+            "on-tertiary": "#00354a",
+            "on-primary-fixed-variant": "#5a00c6",
+            "error": "#ffb4ab",
+            "surface-tint": "#d2bbff",
+            "outline": "#958da1",
+            "on-surface-variant": "#ccc3d8",
+            "on-secondary-fixed": "#2c0051",
+            "on-background": "#dfe2f1",
+            "inverse-surface": "#dfe2f1",
+            "surface": "#0f131d",
+            "tertiary-fixed": "#c4e7ff",
+            "background": "#0f131d",
+            "surface-container": "#1c1f2a",
+            "primary-container": "#7c3aed",
+            "secondary-container": "#7c03d3",
+            "surface-bright": "#353944",
+            "secondary-fixed-dim": "#ddb8ff",
+            "surface-container-high": "#262a35",
+            "on-secondary-fixed-variant": "#6800b4",
+            "tertiary-fixed-dim": "#7bd0ff",
+            "tertiary-container": "#006e95",
+            "on-tertiary-fixed-variant": "#004c69",
+            "on-secondary": "#490080",
+            "secondary": "#ddb8ff",
+            "on-tertiary-fixed": "#001e2c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "gutter": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem"
+          },
+          "fontFamily": {
+            "body-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-sm": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "headline-sm": ["Inter"],
+            "label-lg": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-lg": ["Inter"]
+          },
+          "fontSize": {
+            "body-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+            "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+            "headline-sm": ["15px", {"lineHeight": "20px", "fontWeight": "600"}],
+            "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "body-lg": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0e18;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #313540;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4a4455;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex selection:bg-primary-container selection:text-on-primary-container font-body-md text-body-md overflow-x-hidden">
+<!-- PERSISTENT SIDEBAR NAVIGATION (Anchored from Shared Components JSON) -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-slate-900 border-r border-slate-700/50 shadow-2xl flex flex-col justify-between p-3 select-none">
+<div class="flex flex-col gap-3">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 py-2 border-b border-slate-700/50 pb-3">
+<div class="w-9 h-9 rounded bg-primary-container/20 border border-primary-container flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-xl" data-icon="shield">shield</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm font-black text-slate-100 tracking-wider uppercase">SQLPhantom</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+</div>
+<span class="font-label-sm text-label-sm text-slate-400 truncate">v4.2.0 â€¢ sqlmap Enhanced</span>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full py-2 px-3 rounded-lg bg-primary-container hover:bg-violet-700 text-on-primary-container font-headline-sm text-body-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-950/40 active:scale-[0.99] transition-all">
+<span class="material-symbols-outlined" data-icon="add_moderator">add_moderator</span>
+<span>New Assessment</span>
+</button>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-1 mt-1 overflow-y-auto max-h-[calc(100vh-320px)] pr-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<!-- Projects & Targets -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="dataset">dataset</span>
+<span class="font-body-md text-body-md">Projects &amp; Targets</span>
+</a>
+<!-- Request Editor -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="code">code</span>
+<span class="font-body-md text-body-md">Request Editor</span>
+</a>
+<!-- Live Monitor -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="monitor_heart">monitor_heart</span>
+<span class="font-body-md text-body-md">Live Monitor</span>
+</a>
+<!-- Findings (ACTIVE ITEM: style_active_navigation applied) -->
+<a class="flex items-center justify-between px-3 py-2 rounded-lg bg-violet-600/15 text-violet-400 font-semibold border-l-2 border-violet-500 shadow-inner" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-violet-400" data-icon="bug_report">bug_report</span>
+<span class="font-body-md text-body-md font-semibold">Findings</span>
+</div>
+<span class="font-label-sm text-label-sm bg-violet-500/20 text-violet-300 px-1.5 py-0.5 rounded border border-violet-500/30">4</span>
+</a>
+<!-- Sessions -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="history">history</span>
+<span class="font-body-md text-body-md">Sessions</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="description">description</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+<!-- Plugins -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="extension">extension</span>
+<span class="font-body-md text-body-md">Plugins</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<!-- About -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400" data-icon="info">info</span>
+<span class="font-body-md text-body-md">About</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer -->
+<div class="flex flex-col gap-2 pt-2 border-t border-slate-700/50">
+<!-- Status Chip -->
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-surface-container-low border border-slate-700/40">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+<span class="font-label-sm text-label-sm text-slate-300">sqlmap API :8775</span>
+</div>
+<span class="font-label-sm text-label-sm text-emerald-400 font-semibold">ONLINE</span>
+</div>
+<!-- Secondary Links -->
+<div class="grid grid-cols-2 gap-1 pt-1">
+<a class="flex items-center justify-center gap-1.5 py-1 px-2 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 text-xs transition-colors" href="#">
+<span class="material-symbols-outlined text-[15px]" data-icon="menu_book">menu_book</span>
+<span class="font-body-sm text-body-sm">Documentation</span>
+</a>
+<a class="flex items-center justify-center gap-1.5 py-1 px-2 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 text-xs transition-colors" href="#">
+<span class="material-symbols-outlined text-[15px]" data-icon="terminal">terminal</span>
+<span class="font-body-sm text-body-sm">Terminal</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- WORKSPACE CONTAINER (Offset by 64 = 256px) -->
+<div class="flex-1 ml-64 flex flex-col min-w-0 bg-surface-container-lowest min-h-screen">
+<!-- TOP PERSISTENT COMMAND BAR (From Shared Components JSON) -->
+<header class="sticky top-0 right-0 h-14 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-700/50 flex items-center justify-between px-6">
+<!-- Left: Breadcrumb and Active Target Scope -->
+<div class="flex items-center gap-3 min-w-0">
+<div class="flex items-center gap-1.5 text-slate-400 font-headline-sm text-body-sm">
+<span class="font-bold text-slate-200">SQLPhantom</span>
+<span class="text-slate-600">/</span>
+<span class="text-violet-400">Findings &amp; Evidence Triage</span>
+</div>
+<span class="text-slate-700">|</span>
+<div class="flex items-center gap-1.5 bg-surface-container-low px-2 py-0.5 rounded border border-slate-700/60 max-w-md truncate">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="dataset">dataset</span>
+<span class="font-label-sm text-label-sm text-on-surface truncate">http://testphp.vulnweb.com/listproducts.php?cat=1</span>
+</div>
+</div>
+<!-- Right: Search, Filter, Export Split Button, Profile -->
+<div class="flex items-center gap-3">
+<!-- Quick Search -->
+<div class="relative w-48">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm" data-icon="search">search</span>
+<input class="w-full bg-slate-950/70 border border-slate-700/50 rounded-lg pl-8 pr-2.5 py-1 text-body-sm font-body-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Quick search..." type="text"/>
+</div>
+<!-- Filter Dropdown Trigger -->
+<button class="flex items-center gap-1 py-1 px-2.5 rounded-lg border border-slate-700/50 bg-slate-800/40 text-slate-300 hover:bg-slate-800 text-body-sm font-body-sm transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="tune">tune</span>
+<span>Filter</span>
+</button>
+<!-- Export Report Split Button -->
+<div class="inline-flex rounded-lg shadow-sm border border-violet-500/40 bg-primary-container">
+<button class="px-3 py-1 font-body-sm text-body-sm font-medium text-white hover:bg-violet-700 flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span>
+<span>Export Report</span>
+</button>
+<div class="relative inline-block border-l border-violet-400/40">
+<button class="px-1.5 py-1 text-white hover:bg-violet-700 flex items-center h-full transition-colors" title="Export Formats">
+<span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+<div class="h-4 w-px bg-slate-700/70"></div>
+<!-- Notification Icon -->
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary-container ring-2 ring-slate-900"></span>
+</button>
+<!-- Operator User Profile -->
+<div class="flex items-center gap-2 pl-1 cursor-pointer">
+<img class="w-7 h-7 rounded-full border border-violet-500/50 object-cover" data-alt="Cybersecurity operator profile avatar with high-contrast tactical visor and dark obsidian slate tones, illuminated with electric violet highlights in a modern security operations center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPzNKvvPPrDyXLqtz909fKa_fg-qG7V6B58e25sflldzKF4sbEUwrmKD4fGeI86hm71cRnBYInHj5xgJcGnLlub4Mp9com60tkKgPFrbHvB49yMVWHnem5WR6GTh8INp-1Mkma8TQY_yXEjQ36bwtsfRezgBRKFwcLLTdKxgCcnmpY2-IqYNKwfloJjsCFinwR39us2-JwGAPUw9gHbYzvIc3_cOtZ-TiMDeggkkwR4D_j1BP4nQ46Z7GXI0-lY26EbNp0Xolj3Lo"/>
+<span class="font-label-sm text-label-sm text-slate-300 hidden xl:inline">op_zer0</span>
+</div>
+</div>
+</header>
+<!-- CONTENT WRAPPER -->
+<main class="p-4 flex flex-col gap-3 min-w-0">
+<!-- SECTION 1: TOP SUMMARY KPI METRICS STRIP -->
+<section class="grid grid-cols-6 gap-2.5">
+<!-- KPI 1: Total Findings -->
+<div class="bg-slate-900 border border-slate-700/50 rounded-lg p-2.5 flex items-center justify-between shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-slate-400">Total Findings</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-slate-100">4</span>
+<span class="font-label-sm text-label-sm text-slate-400">confirmed</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded bg-primary-container/20 border border-primary-container/30 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+</div>
+<!-- KPI 2: Critical Severity -->
+<div class="bg-slate-900 border border-rose-500/30 rounded-lg p-2.5 flex items-center justify-between shadow-sm bg-rose-950/10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-rose-400">Critical</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-rose-400">1</span>
+<span class="font-label-sm text-label-sm text-slate-400">Error-based</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40">CVSS 9.8</span>
+</div>
+<!-- KPI 3: High Severity -->
+<div class="bg-slate-900 border border-amber-500/30 rounded-lg p-2.5 flex items-center justify-between shadow-sm bg-amber-950/10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-400">High</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-amber-400">2</span>
+<span class="font-label-sm text-label-sm text-slate-400">Blind / Union</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40">CVSS 8.5</span>
+</div>
+<!-- KPI 4: Medium Severity -->
+<div class="bg-slate-900 border border-yellow-500/30 rounded-lg p-2.5 flex items-center justify-between shadow-sm bg-yellow-950/10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-yellow-400">Medium</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-yellow-400">1</span>
+<span class="font-label-sm text-label-sm text-slate-400">Time-based</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">CVSS 5.3</span>
+</div>
+<!-- KPI 5: DBMS Identified -->
+<div class="bg-slate-900 border border-primary-container/40 rounded-lg p-2.5 flex items-center justify-between shadow-sm bg-violet-950/10">
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-violet-300">Target DBMS</span>
+<div class="flex items-center gap-1.5 mt-0.5 truncate">
+<span class="font-headline-sm text-headline-sm font-bold text-slate-100 truncate">PostgreSQL 15.3</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-semibold bg-primary-container/20 text-violet-300 border border-violet-500/30 whitespace-nowrap">99.8% Conf</span>
+</div>
+<!-- KPI 6: Scope Status -->
+<div class="bg-slate-900 border border-emerald-500/30 rounded-lg p-2.5 flex items-center justify-between shadow-sm bg-emerald-950/10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-emerald-400">Exploitation State</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-headline-sm text-headline-sm font-bold text-emerald-300">Exploit Ready</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 whitespace-nowrap">Schema Dumped</span>
+</div>
+</section>
+<!-- SECTION 2: TWO-COLUMN TRIAGE WORKSPACE -->
+<section class="grid grid-cols-12 gap-3 items-start min-h-[calc(100vh-175px)]">
+<!-- LEFT PANE: FINDINGS MASTER LIST (~35% -> 4 cols out of 12) -->
+<div class="col-span-4 bg-slate-900 border border-slate-700/50 rounded-lg flex flex-col h-[calc(100vh-180px)] overflow-hidden">
+<!-- Pane Header & Filters -->
+<div class="p-3 border-b border-slate-700/50 bg-slate-900/90 flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-violet-400" data-icon="bug_report">bug_report</span>
+<span class="font-headline-sm text-headline-sm text-slate-100 font-semibold">Confirmed Injection Vectors</span>
+</div>
+<span class="font-label-sm text-label-sm text-slate-400">Sorted by Severity</span>
+</div>
+<!-- Filter Search Input -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm" data-icon="filter_list">filter_list</span>
+<input class="w-full bg-slate-950 border border-slate-700/60 rounded-lg pl-8 pr-2 py-1.5 text-body-sm font-body-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Filter findings, params, payloads..." type="text"/>
+</div>
+<!-- Severity Pills -->
+<div class="flex items-center gap-1.5 overflow-x-auto text-xs pb-0.5">
+<button class="px-2 py-0.5 rounded bg-primary-container/20 text-violet-300 font-label-sm text-label-sm border border-violet-500/30 font-medium">All (4)</button>
+<button class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 font-label-sm text-label-sm border border-rose-500/30 hover:bg-rose-500/20">Critical (1)</button>
+<button class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-label-sm text-label-sm border border-amber-500/30 hover:bg-amber-500/20">High (2)</button>
+<button class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-300 font-label-sm text-label-sm border border-yellow-500/30 hover:bg-yellow-500/20">Med (1)</button>
+<button class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-label-sm text-label-sm border border-slate-700/50">Low (0)</button>
+</div>
+</div>
+<!-- Scrollable Findings Cards List -->
+<div class="flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
+<!-- CARD 1: [SELECTED / ACTIVE] -->
+<div class="p-3 rounded-lg bg-slate-800/80 border-2 border-violet-500 shadow-lg shadow-violet-950/30 flex flex-col gap-2 relative cursor-pointer ring-1 ring-violet-500/40">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-bold bg-rose-500/25 text-rose-300 border border-rose-500/50">CRITICAL 9.8</span>
+<span class="font-label-sm text-label-sm text-slate-400">CWE-89</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-violet-400 animate-ping"></span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold text-slate-100">Error-based SQL Injection</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm bg-slate-950 px-1.5 py-0.5 rounded text-violet-300 border border-slate-700 font-mono">GET : cat</span>
+<span class="font-label-sm text-label-sm text-slate-400">[E] CAST syntax disclosure</span>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-700/60 flex items-center justify-between text-slate-400 font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-emerald-400" data-icon="check_circle">check_circle</span>
+                  Verified by sqlmap v1.8.4
+                </span>
+<span>14:38:05</span>
+</div>
+</div>
+<!-- CARD 2: [INACTIVE] -->
+<div class="p-3 rounded-lg bg-slate-900 hover:bg-slate-800/60 border border-slate-700/60 flex flex-col gap-2 cursor-pointer transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">HIGH 8.5</span>
+<span class="font-label-sm text-label-sm text-slate-400">CWE-89</span>
+</div>
+<span class="font-label-sm text-label-sm text-emerald-400">99.8% Conf</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-semibold text-slate-200">Boolean-based Blind Injection</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm bg-slate-950 px-1.5 py-0.5 rounded text-amber-300 border border-slate-700 font-mono">GET : cat</span>
+<span class="font-label-sm text-label-sm text-slate-400">[B] Conditional TRUE/FALSE</span>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-800 flex items-center justify-between text-slate-400 font-label-sm text-label-sm">
+<span>Statistical differential match</span>
+<span>14:38:05</span>
+</div>
+</div>
+<!-- CARD 3: [INACTIVE] -->
+<div class="p-3 rounded-lg bg-slate-900 hover:bg-slate-800/60 border border-slate-700/60 flex flex-col gap-2 cursor-pointer transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">HIGH 8.1</span>
+<span class="font-label-sm text-label-sm text-slate-400">CWE-89</span>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary">4 Columns</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-semibold text-slate-200">UNION Query Injection</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm bg-slate-950 px-1.5 py-0.5 rounded text-amber-300 border border-slate-700 font-mono">GET : cat</span>
+<span class="font-label-sm text-label-sm text-slate-400">[U] ORDER BY projection</span>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-800 flex items-center justify-between text-slate-400 font-label-sm text-label-sm">
+<span>Active reflection in response</span>
+<span>14:38:12</span>
+</div>
+</div>
+<!-- CARD 4: [INACTIVE] -->
+<div class="p-3 rounded-lg bg-slate-900 hover:bg-slate-800/60 border border-slate-700/60 flex flex-col gap-2 cursor-pointer transition-colors">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">MEDIUM 5.3</span>
+<span class="font-label-sm text-label-sm text-slate-400">CWE-89</span>
+</div>
+<span class="font-label-sm text-label-sm text-yellow-400">Delay 5.0s</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm font-semibold text-slate-200">Time-based Blind (pg_sleep)</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-sm text-label-sm bg-slate-950 px-1.5 py-0.5 rounded text-yellow-300 border border-slate-700 font-mono">GET : cat</span>
+<span class="font-label-sm text-label-sm text-slate-400">[T] Latency injection</span>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-800 flex items-center justify-between text-slate-400 font-label-sm text-label-sm">
+<span>High jitter tolerance match</span>
+<span>14:38:22</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT PANE: EVIDENCE & EXPLOITATION DETAIL VIEW (~65% -> 8 cols out of 12) -->
+<div class="col-span-8 bg-slate-900 border border-slate-700/50 rounded-lg flex flex-col h-[calc(100vh-180px)] overflow-hidden">
+<!-- Detail Header & Action Buttons Bar -->
+<div class="p-3.5 border-b border-slate-700/50 bg-slate-900/90 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded font-label-sm text-label-sm font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">CRITICAL</span>
+<span class="font-label-sm text-label-sm text-slate-400">CVSS v3.1: 9.8 / AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</span>
+<span class="text-slate-600">â€¢</span>
+<span class="font-label-sm text-label-sm text-slate-300">CWE-89: SQL Injection</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg font-bold text-slate-100 flex items-center gap-2">
+<span>Error-based SQL Injection</span>
+<span class="font-normal text-slate-400 font-body-sm text-body-sm">on parameter <span class="font-mono text-violet-300 font-bold">'cat'</span> (HTTP GET)</span>
+</h2>
+<!-- Target Endpoint with Quick-Copy -->
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-slate-400 bg-slate-950 px-2 py-1 rounded border border-slate-800 max-w-2xl">
+<span class="text-slate-500 font-semibold uppercase">Endpoint:</span>
+<span class="text-slate-300 truncate">http://testphp.vulnweb.com/listproducts.php?cat=1</span>
+<button class="ml-auto text-slate-400 hover:text-slate-200 transition-colors" title="Copy URL">
+<span class="material-symbols-outlined text-[15px]" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Primary Actions Bar -->
+<div class="flex items-center gap-2 flex-wrap justify-end">
+<button class="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-violet-700 text-white font-headline-sm text-body-sm font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="content_copy">content_copy</span>
+<span>Copy Exploit Payload</span>
+</button>
+<button class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-body-sm text-body-sm flex items-center gap-1.5 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+<span>Re-verify</span>
+</button>
+<button class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-body-sm text-body-sm flex items-center gap-1.5 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
+<span>PoC cURL</span>
+</button>
+<a class="text-violet-400 hover:text-violet-300 text-body-sm font-body-sm flex items-center gap-0.5 px-1 py-1" href="#">
+<span>Send to Editor</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Tabbed Sub-Navigation -->
+<div class="flex items-center gap-6 border-t border-slate-700/50 pt-2 text-body-sm font-body-sm">
+<button class="text-violet-400 font-bold border-b-2 border-violet-500 pb-1.5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="verified_user">verified_user</span>
+<span>Evidence &amp; PoC</span>
+</button>
+<button class="text-slate-400 hover:text-slate-200 transition-colors pb-1.5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="sync_alt">sync_alt</span>
+<span>HTTP Request / Response</span>
+</button>
+<button class="text-slate-400 hover:text-slate-200 transition-colors pb-1.5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="schema">schema</span>
+<span>Extracted Schema (3 tables)</span>
+</button>
+<button class="text-slate-400 hover:text-slate-200 transition-colors pb-1.5 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="healing">healing</span>
+<span>Remediation Guidance</span>
+</button>
+</div>
+</div>
+<!-- TAB CONTENT CANVAS (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+<!-- Attack Vector & Injection Mechanism Explainer Box -->
+<div class="bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-violet-400 font-headline-sm text-body-sm font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="psychology">psychology</span>
+<span>Injection Mechanism &amp; Vulnerability Diagnostics</span>
+</div>
+<p class="text-slate-300 font-body-sm text-body-sm leading-relaxed">
+                The target parameter <code class="bg-slate-950 text-violet-300 px-1 py-0.5 rounded font-mono font-medium">cat</code> is concatenated directly into a dynamic backend SQL query without parameterization or numeric sanitization. By supplying an explicit <code class="bg-slate-950 text-violet-300 px-1 py-0.5 rounded font-mono font-medium">CAST(... AS integer)</code> conversion, arbitrary string output (such as DB version, current schema, or user hashes) is forced into PostgreSQL's internal exception handler and reflected verbatim within the application's HTTP 500 error body.
+              </p>
+</div>
+<!-- Exploit Payload Codeblock -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-violet-400" data-icon="code">code</span>
+                  Active Exploit Payload (Synthesized by sqlmap engine)
+                </span>
+<span class="font-label-sm text-label-sm text-slate-500 font-mono">Payload ID: #PL-PGSQL-CAST-01</span>
+</div>
+<div class="bg-slate-950 rounded-lg border border-slate-700/80 p-3 font-mono text-body-sm text-slate-200 flex items-center justify-between group shadow-inner">
+<div class="truncate">
+<span class="text-amber-400">cat=1'</span>
+<span class="text-violet-400 font-bold"> AND CAST(</span>
+<span class="text-slate-300">(SELECT version())</span>
+<span class="text-violet-400 font-bold"> AS int)--</span>
+</div>
+<button class="opacity-80 group-hover:opacity-100 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1 border border-slate-700 transition-all" title="Copy raw payload">
+<span class="material-symbols-outlined text-[13px]" data-icon="content_copy">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+</div>
+<!-- Raw DBMS Error Reflection Snippet Box -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-rose-400" data-icon="terminal">terminal</span>
+                  Raw DBMS Error Response Reflection (Exfiltrated Memory Output)
+                </span>
+<span class="font-label-sm text-label-sm text-emerald-400 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Regex Captured: 84 bytes
+                </span>
+</div>
+<div class="bg-[#070a12] rounded-lg border border-rose-900/40 p-3 font-mono text-body-sm leading-relaxed text-slate-300 shadow-inner">
+<span class="text-rose-400 font-bold">ERROR:</span>
+<span class="text-slate-400"> invalid input syntax for integer: </span>
+<span class="text-emerald-300 font-bold bg-emerald-950/40 px-1 py-0.5 rounded border border-emerald-500/30">"PostgreSQL 15.3 on x86_64-pc-linux-gnu, compiled by gcc 11.2.0"</span>
+<span class="text-slate-500 block text-xs mt-1.5">STATEMENT: SELECT * FROM products WHERE cat_id = 1' AND CAST((SELECT version()) AS int)--</span>
+</div>
+</div>
+<!-- Automated Exploitation Proof Matrix (Telemetry Grid) -->
+<div class="grid grid-cols-3 gap-3">
+<!-- Grid 1: Current User -->
+<div class="bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-slate-400 uppercase tracking-wider">Current DB User</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-emerald-400 text-base" data-icon="account_circle">account_circle</span>
+<span class="font-label-lg text-label-lg font-bold text-slate-100 font-mono">postgres</span>
+<span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-label-sm text-label-sm border border-rose-500/40">superuser</span>
+</div>
+</div>
+<!-- Grid 2: Current DB Name -->
+<div class="bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-slate-400 uppercase tracking-wider">Active Database</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-primary text-base" data-icon="storage">storage</span>
+<span class="font-label-lg text-label-lg font-bold text-slate-100 font-mono">acme_store_prod</span>
+<span class="px-1.5 py-0.2 rounded bg-primary-container/20 text-violet-300 font-label-sm text-label-sm border border-violet-500/30">UTF8</span>
+</div>
+</div>
+<!-- Grid 3: Privilege Escalation Potential -->
+<div class="bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-slate-400 uppercase tracking-wider">Privilege Escalation</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-rose-400 text-base" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="font-label-lg text-label-lg font-bold text-rose-300 font-mono">DBA: True</span>
+<span class="font-label-sm text-label-sm text-slate-400">(COPY TO file writeable)</span>
+</div>
+</div>
+</div>
+<!-- Bento Sub-Grid: Schema Preview & Remediation Guidance -->
+<div class="grid grid-cols-12 gap-3 items-stretch">
+<!-- Extracted Schema Tree Preview (Tab 3 Preview) -->
+<div class="col-span-6 bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm font-semibold text-slate-200 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary" data-icon="account_tree">account_tree</span>
+<span>Extracted Schema Tree</span>
+</span>
+<span class="font-label-sm text-label-sm text-emerald-400 font-mono">3 Tables Enumerated</span>
+</div>
+<!-- Schema Tree Hierarchy -->
+<div class="font-mono text-body-sm bg-slate-950 p-2.5 rounded border border-slate-800 flex flex-col gap-1.5 text-slate-300">
+<div class="flex items-center gap-1.5 text-violet-300 font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="folder">folder</span>
+<span>db: acme_store_prod (PostgreSQL)</span>
+</div>
+<!-- Table 1: users -->
+<div class="ml-4 pl-2 border-l border-slate-700 flex flex-col gap-0.5">
+<div class="flex items-center justify-between text-slate-200">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-amber-400" data-icon="table_chart">table_chart</span>
+<span class="font-bold text-amber-300">users</span>
+</span>
+<span class="font-label-sm text-label-sm text-rose-400 font-sans font-semibold">1,420 rows (P1)</span>
+</div>
+<span class="text-xs text-slate-400 pl-4 font-mono">id [int], username [varchar], password_hash [varchar], role [varchar]</span>
+</div>
+<!-- Table 2: products -->
+<div class="ml-4 pl-2 border-l border-slate-700 flex flex-col gap-0.5 mt-1">
+<div class="flex items-center justify-between text-slate-200">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-slate-400" data-icon="table_chart">table_chart</span>
+<span>products</span>
+</span>
+<span class="font-label-sm text-label-sm text-slate-500 font-sans">84 rows</span>
+</div>
+<span class="text-xs text-slate-400 pl-4 font-mono">id, name, price, stock, cat_id, description</span>
+</div>
+<!-- Table 3: orders -->
+<div class="ml-4 pl-2 border-l border-slate-700 flex flex-col gap-0.5 mt-1">
+<div class="flex items-center justify-between text-slate-200">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-slate-400" data-icon="table_chart">table_chart</span>
+<span>orders</span>
+</span>
+<span class="font-label-sm text-label-sm text-slate-500 font-sans">9,310 rows</span>
+</div>
+<span class="text-xs text-slate-400 pl-4 font-mono">id, user_id, order_total, payment_status, created_at</span>
+</div>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-800 text-xs mt-2">
+<span class="text-slate-400">Full schema available in schema tab</span>
+<button class="text-violet-400 hover:text-violet-300 font-medium flex items-center gap-0.5">
+<span>Dump Table Rows</span>
+<span class="material-symbols-outlined text-xs" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Remediation Guidance Box (Tab 4 Preview) -->
+<div class="col-span-6 bg-surface-container-low border border-slate-700/60 rounded-lg p-3 flex flex-col justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm font-semibold text-slate-200 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-400" data-icon="security">security</span>
+<span>Remediation Guidance</span>
+</span>
+<span class="px-1.5 py-0.5 rounded font-label-sm text-label-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Secure Pattern</span>
+</div>
+<p class="text-slate-300 font-body-sm text-body-sm">
+                    Enforce parameterized query binding or object-relational mapping (ORM). Prohibit dynamic string formatting in DB statements.
+                  </p>
+<!-- Secure Code Snippets -->
+<div class="bg-slate-950 p-2 rounded border border-slate-800 flex flex-col gap-2 font-mono text-xs">
+<div>
+<div class="flex items-center justify-between text-slate-400 text-[11px] mb-1">
+<span class="text-violet-300 font-bold">Python (psycopg2)</span>
+<span class="text-slate-500">Parameterized</span>
+</div>
+<code class="text-slate-300 block bg-slate-900/90 p-1.5 rounded border border-slate-800/80">
+                        cursor.execute(<span class="text-emerald-300">"SELECT * FROM products WHERE cat = %s"</span>, (cat_id,))
+                      </code>
+</div>
+<div>
+<div class="flex items-center justify-between text-slate-400 text-[11px] mb-1">
+<span class="text-tertiary font-bold">Java (PreparedStatement)</span>
+<span class="text-slate-500">Parameterized</span>
+</div>
+<code class="text-slate-300 block bg-slate-900/90 p-1.5 rounded border border-slate-800/80">
+                        PreparedStatement stmt = conn.prepareStatement(<span class="text-emerald-300">"SELECT * FROM products WHERE cat = ?"</span>);<br/>
+                        stmt.setInt(1, catId);
+                      </code>
+</div>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between border-t border-slate-800 text-xs mt-2">
+<span class="text-slate-400">Defense-in-depth: WAF regex rule</span>
+<a class="text-violet-400 hover:text-violet-300 font-medium" href="#">Export Remediation Ticket â†’</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

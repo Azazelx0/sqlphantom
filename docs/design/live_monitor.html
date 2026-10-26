@@ -1,0 +1,691 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SQLPhantom - Live Assessment Monitoring</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#004c69",
+            "on-primary": "#3f008e",
+            "on-background": "#dfe2f1",
+            "tertiary-fixed": "#c4e7ff",
+            "secondary-fixed-dim": "#ddb8ff",
+            "on-secondary-fixed-variant": "#6800b4",
+            "tertiary-container": "#006e95",
+            "surface-container-highest": "#313540",
+            "on-primary-fixed-variant": "#5a00c6",
+            "primary": "#d2bbff",
+            "secondary-container": "#7c03d3",
+            "inverse-on-surface": "#2c303b",
+            "tertiary": "#7bd0ff",
+            "on-surface": "#dfe2f1",
+            "surface-bright": "#353944",
+            "on-secondary": "#490080",
+            "on-error": "#690005",
+            "outline": "#958da1",
+            "on-primary-container": "#ede0ff",
+            "outline-variant": "#4a4455",
+            "surface-tint": "#d2bbff",
+            "secondary-fixed": "#f0dbff",
+            "secondary": "#ddb8ff",
+            "primary-container": "#7c3aed",
+            "primary-fixed": "#eaddff",
+            "inverse-surface": "#dfe2f1",
+            "error-container": "#93000a",
+            "inverse-primary": "#732ee4",
+            "surface-container": "#1c1f2a",
+            "on-tertiary-fixed": "#001e2c",
+            "surface-container-low": "#171b26",
+            "surface": "#0f131d",
+            "surface-dim": "#0f131d",
+            "surface-container-high": "#262a35",
+            "on-surface-variant": "#ccc3d8",
+            "surface-variant": "#313540",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#0a0e18",
+            "on-tertiary": "#00354a",
+            "on-secondary-container": "#dfbcff",
+            "background": "#0f131d",
+            "error": "#ffb4ab",
+            "on-secondary-fixed": "#2c0051",
+            "on-tertiary-container": "#caeaff",
+            "primary-fixed-dim": "#d2bbff",
+            "tertiary-fixed-dim": "#7bd0ff",
+            "on-primary-fixed": "#25005a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-md": "0.75rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin": "1rem",
+            "gutter": "0.75rem"
+          },
+          "fontFamily": {
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-sm": ["JetBrains Mono"],
+            "label-md": ["JetBrains Mono"],
+            "label-lg": ["JetBrains Mono"],
+            "headline-sm": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "body-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "body-lg": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "400"}],
+            "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+            "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+            "headline-sm": ["15px", {"lineHeight": "20px", "fontWeight": "600"}],
+            "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Custom scrollbar for cyber terminals */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0e18;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262a35;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4a4455;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- ==================== SIDEBAR (Shared Component: SideNavBar) ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-slate-900 border-r border-slate-700/50 shadow-2xl flex flex-col justify-between p-3 select-none">
+<div class="flex flex-col gap-3">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 py-2 border-b border-slate-700/50">
+<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-lg shadow-violet-900/30">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-black text-slate-100 tracking-wider text-base uppercase">SQLPhantom</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+</div>
+<span class="font-label-sm text-label-sm text-slate-400">v4.2.0 â€¢ sqlmap Enhanced</span>
+</div>
+</div>
+<!-- Quick Action CTA -->
+<button class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-primary-container hover:bg-violet-600 text-on-primary-container font-headline-sm text-body-sm shadow-md transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-sm">add_moderator</span>
+<span>New Assessment</span>
+</button>
+<!-- Navigation Tabs (11 Items strictly matching JSON) -->
+<nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-270px)] pr-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#dashboard">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span class="font-display font-medium text-sm tracking-tight">Dashboard</span>
+</a>
+<!-- Projects & Targets -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#projects">
+<span class="material-symbols-outlined text-lg">dataset</span>
+<span class="font-display font-medium text-sm tracking-tight">Projects &amp; Targets</span>
+</a>
+<!-- New Assessment -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#new-assessment">
+<span class="material-symbols-outlined text-lg">add_moderator</span>
+<span class="font-display font-medium text-sm tracking-tight">New Assessment</span>
+</a>
+<!-- Request Editor -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#request-editor">
+<span class="material-symbols-outlined text-lg">code</span>
+<span class="font-display font-medium text-sm tracking-tight">Request Editor</span>
+</a>
+<!-- Live Monitor (ACTIVE TAB) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-600/15 text-violet-400 font-semibold border-l-2 border-violet-500 shadow-sm shadow-violet-950/40" href="#live-monitor">
+<span class="material-symbols-outlined text-lg animate-pulse" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<span class="font-display font-medium text-sm tracking-tight flex-1">Live Monitor</span>
+<span class="w-2 h-2 rounded-full bg-violet-400 animate-ping"></span>
+</a>
+<!-- Findings -->
+<a class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#findings">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg">bug_report</span>
+<span class="font-display font-medium text-sm tracking-tight">Findings</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm font-semibold bg-red-500/20 text-error border border-red-500/30">2</span>
+</a>
+<!-- Sessions -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#sessions">
+<span class="material-symbols-outlined text-lg">history</span>
+<span class="font-display font-medium text-sm tracking-tight">Sessions</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#reports">
+<span class="material-symbols-outlined text-lg">description</span>
+<span class="font-display font-medium text-sm tracking-tight">Reports</span>
+</a>
+<!-- Plugins -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#plugins">
+<span class="material-symbols-outlined text-lg">extension</span>
+<span class="font-display font-medium text-sm tracking-tight">Plugins</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#settings">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="font-display font-medium text-sm tracking-tight">Settings</span>
+</a>
+<!-- About -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 font-normal hover:bg-slate-800/60 hover:text-slate-200 transition-colors duration-150" href="#about">
+<span class="material-symbols-outlined text-lg">info</span>
+<span class="font-display font-medium text-sm tracking-tight">About</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer Telemetry & Sub-links -->
+<div class="pt-3 border-t border-slate-700/50 flex flex-col gap-2">
+<!-- Engine Status Pill -->
+<div class="bg-surface-container-lowest px-2.5 py-1.5 rounded-lg border border-slate-700/40 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-label-sm text-[10px] text-slate-300">sqlmap API :8775</span>
+</div>
+<span class="font-label-sm text-[10px] text-emerald-400 font-semibold">ONLINE</span>
+</div>
+<div class="flex items-center justify-between px-1">
+<a class="flex items-center gap-1.5 text-slate-400 hover:text-slate-200 text-xs transition-colors" href="#docs">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span class="font-body-sm text-[11px]">Documentation</span>
+</a>
+<a class="flex items-center gap-1.5 text-slate-400 hover:text-slate-200 text-xs transition-colors" href="#terminal">
+<span class="material-symbols-outlined text-sm">terminal</span>
+<span class="font-body-sm text-[11px]">Terminal</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- ==================== TOP NAVIGATION BAR (Shared Component: TopNavBar) ==================== -->
+<header class="sticky top-0 right-0 h-14 z-30 ml-64 bg-slate-900/90 backdrop-blur-md border-b border-slate-700/50 shadow-sm flex items-center justify-between px-6">
+<!-- Left: Target Indicator & Search/Context -->
+<div class="flex items-center gap-4 min-w-0">
+<div class="flex items-center gap-2 bg-surface-container-lowest px-2.5 py-1 rounded border border-slate-700/60">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-md font-bold bg-primary-container text-on-primary-container">GET</span>
+<span class="font-label-sm text-body-sm text-on-surface truncate max-w-sm">http://testphp.vulnweb.com/listproducts.php?cat=1</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-label-sm font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">In Scope</span>
+</div>
+<!-- Quick Nav Cluster -->
+<nav class="hidden xl:flex items-center gap-4 text-xs font-headline font-semibold uppercase tracking-wider text-slate-400 pl-2">
+<a class="text-violet-400 font-bold border-b-2 border-violet-500 pb-1" href="#engines">Engines</a>
+<a class="hover:text-slate-200 transition-colors" href="#payloads">Payloads</a>
+<a class="hover:text-slate-200 transition-colors" href="#proxies">Proxies</a>
+</nav>
+</div>
+<!-- Right: Telemetry & Global Execution Controls -->
+<div class="flex items-center gap-3">
+<!-- Status Badge -->
+<div class="flex items-center gap-2 px-2.5 py-1 rounded bg-surface-container-low border border-slate-700/50">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+</span>
+<span class="font-label-md text-label-sm font-bold text-violet-300">RUNNING</span>
+<span class="text-slate-600">|</span>
+<span class="font-label-sm text-label-sm text-slate-300">Stage: <strong class="text-primary">DETECTION (68%)</strong></span>
+<span class="text-slate-600">|</span>
+<span class="font-label-sm text-label-sm text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">timer</span>00:04:18
+        </span>
+</div>
+<!-- Quick Action Controls -->
+<div class="flex items-center gap-1.5">
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-bright text-slate-200 border border-slate-700/60 font-body-sm text-xs flex items-center gap-1 transition-all active:scale-95" title="Pause Assessment">
+<span class="material-symbols-outlined text-sm">pause</span>
+<span class="hidden lg:inline">Pause</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-error border border-red-500/30 font-body-sm text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm" title="Terminate current task">
+<span class="material-symbols-outlined text-sm">stop</span>
+<span>Stop Assessment</span>
+</button>
+<div class="h-4 w-[1px] bg-slate-700 mx-1"></div>
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-lg">notifications</span>
+</button>
+<button class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors" title="Tuning &amp; Threads">
+<span class="material-symbols-outlined text-lg">tune</span>
+</button>
+<button class="p-1 rounded-lg text-violet-400 hover:text-violet-300 transition-colors" title="Operator Profile">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ==================== MAIN WORKSPACE ==================== -->
+<main class="ml-64 p-4 flex flex-col gap-4 min-h-[calc(100vh-56px)]">
+<!-- 1. STAGE EXECUTION PROGRESS STEPPER -->
+<section class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3.5 shadow-md flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-violet-400 text-lg">tune</span>
+<h2 class="font-headline-sm text-headline-sm text-slate-100">Assessment Execution Pipeline</h2>
+<span class="font-label-sm text-[11px] text-slate-400">Thread Pool: 8/8 â€¢ Level 2 â€¢ Risk 2</span>
+</div>
+<div class="flex items-center gap-3 font-label-md text-label-sm">
+<span class="text-slate-400">Target Response Ratio: <span class="text-emerald-400 font-bold">99.4% OK</span></span>
+<span class="text-slate-600">â€¢</span>
+<span class="text-violet-400 font-bold">Detection Phase Active: 68%</span>
+</div>
+</div>
+<!-- Stepper Stages Row -->
+<div class="grid grid-cols-6 gap-2 pt-1">
+<!-- Stage 1 -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container border border-emerald-500/30">
+<span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-[10px] text-slate-400 uppercase">1. INIT</span>
+<span class="font-label-md text-[11px] text-slate-200 truncate font-semibold">INITIALIZATION</span>
+</div>
+</div>
+<!-- Stage 2 -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container border border-emerald-500/30">
+<span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-[10px] text-slate-400 uppercase">2. PROBE</span>
+<span class="font-label-md text-[11px] text-slate-200 truncate font-semibold">TARGET_PROBE</span>
+</div>
+</div>
+<!-- Stage 3 -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container border border-emerald-500/30">
+<span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-[10px] text-slate-400 uppercase">3. FP</span>
+<span class="font-label-md text-[11px] text-slate-200 truncate font-semibold">FINGERPRINTING</span>
+</div>
+</div>
+<!-- Stage 4 (ACTIVE) -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-violet-950/40 border border-violet-500/70 shadow-sm shadow-violet-900/40 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/10 animate-pulse pointer-events-none"></div>
+<span class="material-symbols-outlined text-violet-400 text-base animate-spin">sync</span>
+<div class="flex flex-col min-w-0 z-10">
+<span class="font-label-sm text-[10px] text-violet-300 uppercase flex items-center justify-between">
+<span>4. RUNNING</span>
+<span class="font-bold">68%</span>
+</span>
+<span class="font-label-md text-[11px] text-violet-100 truncate font-bold">DETECTION</span>
+</div>
+</div>
+<!-- Stage 5 -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container/50 border border-slate-800 opacity-60">
+<span class="material-symbols-outlined text-slate-500 text-base">hourglass_empty</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-[10px] text-slate-500 uppercase">5. PENDING</span>
+<span class="font-label-md text-[11px] text-slate-400 truncate">EXPLOITATION</span>
+</div>
+</div>
+<!-- Stage 6 -->
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container/50 border border-slate-800 opacity-60">
+<span class="material-symbols-outlined text-slate-500 text-base">hourglass_empty</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-[10px] text-slate-500 uppercase">6. QUEUED</span>
+<span class="font-label-md text-[11px] text-slate-400 truncate">CLEANUP</span>
+</div>
+</div>
+</div>
+<!-- Animated Master Progress Bar -->
+<div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden border border-slate-800 mt-1">
+<div class="bg-gradient-to-r from-violet-600 via-primary to-violet-400 h-full rounded-full transition-all duration-500 relative" style="width: 68%;">
+<div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+</div>
+</div>
+</section>
+<!-- 2. LIVE TELEMETRY METRICS ROW (5 Cards) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+<!-- Stat 1 -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between text-slate-400">
+<span class="font-label-sm text-[11px] uppercase tracking-wider">Current Technique</span>
+<span class="material-symbols-outlined text-violet-400 text-base">psychology</span>
+</div>
+<div class="my-1.5">
+<div class="font-body-lg text-headline-sm font-bold text-slate-100 truncate">Boolean &amp; Error-based</div>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-md bg-violet-500/20 text-violet-300 font-bold border border-violet-500/40">[B] Blind</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-md bg-violet-500/20 text-violet-300 font-bold border border-violet-500/40">[E] Error</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-md bg-slate-800 text-slate-400">[T] Time</span>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between text-slate-400">
+<span class="font-label-sm text-[11px] uppercase tracking-wider">Requests Sent</span>
+<span class="material-symbols-outlined text-violet-400 text-base">send_and_archive</span>
+</div>
+<div class="my-1.5 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-slate-100">342</span>
+<span class="font-label-sm text-xs text-emerald-400 font-semibold">42 req/s</span>
+</div>
+<div class="font-label-sm text-[11px] text-slate-400 flex items-center justify-between">
+<span>Bandwidth: 1.48 MB</span>
+<span class="text-slate-500">Retries: 0</span>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between text-slate-400">
+<span class="font-label-sm text-[11px] uppercase tracking-wider">Active Parameter</span>
+<span class="material-symbols-outlined text-violet-400 text-base">data_object</span>
+</div>
+<div class="my-1.5 flex items-center gap-2">
+<span class="font-label-lg text-headline-sm font-bold text-primary truncate">cat</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-label-sm bg-slate-800 text-slate-300 border border-slate-700">QUERY</span>
+</div>
+<div class="font-label-sm text-[11px] text-slate-400 flex items-center justify-between">
+<span>Target Param 1/3</span>
+<span class="text-violet-400 font-semibold">Injection Focus</span>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between text-slate-400">
+<span class="font-label-sm text-[11px] uppercase tracking-wider">DBMS Identified</span>
+<span class="material-symbols-outlined text-violet-400 text-base">database</span>
+</div>
+<div class="my-1.5">
+<div class="font-headline-sm text-headline-sm font-bold text-slate-100 truncate">PostgreSQL 15.3</div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-[11px]">
+<span class="text-slate-400">Confidence:</span>
+<span class="font-bold text-emerald-400">99.8% (Exact)</span>
+</div>
+</div>
+<!-- Stat 5 -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3 flex flex-col justify-between">
+<div class="flex items-center justify-between text-slate-400">
+<span class="font-label-sm text-[11px] uppercase tracking-wider">Network Latency</span>
+<span class="material-symbols-outlined text-violet-400 text-base">speed</span>
+</div>
+<div class="my-1.5 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-slate-100">32<span class="text-sm font-normal text-slate-400">ms</span></span>
+<span class="font-label-sm text-xs text-slate-400">Â±4ms jitter</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-[11px]">
+<span class="text-slate-400">HTTP 200/500:</span>
+<span class="text-slate-300 font-semibold">339 / 3</span>
+</div>
+</div>
+</section>
+<!-- 3. CENTER MAIN SECTION (2-Column Grid) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+<!-- LEFT/CENTER COLUMN: LIVE TERMINAL CONSOLE & PAYLOADS (7 Cols) -->
+<div class="lg:col-span-7 bg-surface-container-low border border-slate-700/50 rounded-xl flex flex-col shadow-lg overflow-hidden">
+<!-- Console Window Header -->
+<div class="bg-surface-container px-3.5 py-2.5 border-b border-slate-700/50 flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+<span class="font-label-md text-label-md text-slate-200 font-semibold ml-2 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-violet-400 text-base">terminal</span>
+              sqlmap Heuristic Engine v4.2.0 Output
+            </span>
+</div>
+<!-- Console Navigation Filters & Toggles -->
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-surface-container-lowest rounded p-0.5 border border-slate-800 text-[11px] font-label-sm">
+<button class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-semibold">All Stream</button>
+<button class="px-2 py-0.5 text-slate-400 hover:text-slate-200">Payloads Only</button>
+<button class="px-2 py-0.5 text-slate-400 hover:text-slate-200">Vulnerabilities</button>
+<button class="px-2 py-0.5 text-slate-400 hover:text-slate-200">Raw Packets</button>
+</div>
+<div class="flex items-center gap-1.5 pl-2 border-l border-slate-700 text-xs font-label-sm text-slate-300">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span>Auto-scroll: ON</span>
+</div>
+</div>
+</div>
+<!-- Terminal Console Body -->
+<div class="bg-[#050811] p-3.5 font-label-sm text-xs leading-5 flex-1 max-h-[380px] overflow-y-auto space-y-1.5 selection:bg-violet-900/60 selection:text-violet-200">
+<div class="text-slate-500 font-label-sm">[14:38:02] [INFO] testing connection to the target URL 'http://testphp.vulnweb.com/listproducts.php?cat=1'...</div>
+<div class="text-slate-400 font-label-sm">[14:38:03] [INFO] checking if the target is protected by some kind of WAF/IPS...</div>
+<div class="text-emerald-400 font-label-sm">[14:38:04] [TRAFFIC] Request #001: responded in 29ms (No WAF block detected)</div>
+<div class="text-cyan-400 font-label-sm">[14:38:05] [INFO] heuristic (basic) test shows that GET parameter 'cat' might be injectable (possible DBMS: 'PostgreSQL')</div>
+<div class="pl-2 border-l border-slate-800 my-1 space-y-1">
+<div class="text-violet-400 font-label-sm">
+<span class="text-violet-300 font-bold">[PAYLOAD]</span> cat=1 AND 8821=8821 -- - <span class="text-slate-500">(HTTP 200, 4821 bytes)</span>
+</div>
+<div class="text-violet-400 font-label-sm">
+<span class="text-violet-300 font-bold">[PAYLOAD]</span> cat=1 AND 8821=8822 -- - <span class="text-amber-400 font-semibold">(HTTP 200, 3120 bytes - Differential Detected!)</span>
+</div>
+</div>
+<div class="bg-amber-950/20 border border-amber-500/30 p-1.5 rounded text-amber-300 font-label-sm">
+<span class="font-bold">[VULN]</span> parameter 'cat' appears to be boolean-based blind injectable (true/false differential ratio: 0.94)
+          </div>
+<div class="text-slate-400 font-label-sm">[14:39:10] [INFO] confirming boolean-based blind injection with 5 verification hashes...</div>
+<div class="text-emerald-400 font-label-sm">[14:39:15] [TRAFFIC] Request #341: POST /proxy/check responded in 31ms</div>
+<div class="text-violet-400 font-label-sm">
+<span class="text-violet-300 font-bold">[PAYLOAD]</span> cat=1' AND (SELECT 4122 FROM (SELECT(SLEEP(5)))a)-- -
+          </div>
+<div class="bg-red-950/30 border border-red-500/40 p-2 rounded text-red-300 font-label-sm font-semibold flex items-start gap-2 shadow-sm">
+<span class="material-symbols-outlined text-error text-base mt-0.5">warning</span>
+<div>
+<div>[VULN - CRITICAL] CONFIRMED: Error-based injection via 'pg_sleep' &amp; 'cast(chr(113)...)'</div>
+<div class="text-slate-400 font-normal text-[11px] mt-0.5">Target dialect confirmed: PostgreSQL 15.3 on x86_64-pc-linux-gnu. Exploitation vector ready.</div>
+</div>
+</div>
+<div class="text-primary font-label-sm flex items-center gap-2 pt-1 animate-pulse">
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span>[14:42:20] [TESTING] parameter 'cat' &gt; Error-based - Parameter replace (CAST)...</span>
+</div>
+</div>
+<!-- Terminal Interactive Control Bar -->
+<div class="bg-surface-container px-3.5 py-2 border-t border-slate-700/50 flex items-center justify-between text-xs font-label-sm">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-sm">search</span>
+<input class="bg-transparent border-none text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-0 p-0 w-56" placeholder="Filter console logs (regex supported)..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs">content_copy</span>
+<span>Copy Payloads</span>
+</button>
+<button class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs">pause_circle</span>
+<span>Pause Stream</span>
+</button>
+<button class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors" title="Clear Buffer">
+<span class="material-symbols-outlined text-xs">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: LIVE CONFIRMED FINDINGS & VECTOR ANALYSIS (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col gap-3">
+<!-- Findings Card Container -->
+<div class="bg-surface-container-low border border-slate-700/50 rounded-xl p-3.5 flex flex-col gap-3 shadow-lg">
+<div class="flex items-center justify-between pb-2 border-b border-slate-700/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-red-400 text-lg">crisis_alert</span>
+<h3 class="font-headline-sm text-headline-sm text-slate-100">Confirmed Injection Vectors (2)</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-label-md font-bold bg-red-500/20 text-error border border-red-500/30 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
+              REAL-TIME FEED
+            </span>
+</div>
+<!-- Finding Card 1 (CRITICAL) -->
+<div class="bg-surface-container border border-red-500/40 rounded-lg p-3 flex flex-col gap-2 relative overflow-hidden group hover:border-red-500/70 transition-all">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-label-md font-bold bg-red-600/30 text-error border border-red-500/40">CRITICAL</span>
+<span class="font-label-md text-xs font-semibold text-slate-200">Error-based SQL Injection</span>
+</div>
+<span class="font-label-sm text-[10px] text-slate-400">Param: <code class="text-primary font-bold">cat [GET]</code></span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-300">
+              PostgreSQL error disclosure allows arbitrary query exfiltration via syntax-induced CAST conversion failure.
+            </p>
+<!-- Sample Proof Box -->
+<div class="bg-surface-container-lowest p-2 rounded border border-slate-800 font-label-sm text-[11px] text-violet-300 truncate select-all">
+<code>cat=1' AND CAST((SELECT version()) AS int)--</code>
+</div>
+<div class="flex items-center justify-between pt-1 text-xs">
+<span class="text-slate-400 text-[11px] font-label-sm">CVSS 9.8 â€¢ CWE-89</span>
+<div class="flex items-center gap-2">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-slate-700 text-slate-200 font-body-sm text-[11px] transition-colors">
+                  View Schema
+                </button>
+<button class="px-2.5 py-1 rounded bg-primary-container hover:bg-violet-600 text-on-primary-container font-body-sm text-[11px] font-semibold transition-colors flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-xs">bolt</span>
+                  Exploit Proof
+                </button>
+</div>
+</div>
+</div>
+<!-- Finding Card 2 (HIGH) -->
+<div class="bg-surface-container border border-amber-500/40 rounded-lg p-3 flex flex-col gap-2 relative overflow-hidden group hover:border-amber-500/70 transition-all">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-label-md font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">HIGH</span>
+<span class="font-label-md text-xs font-semibold text-slate-200">Boolean-based Blind Injection</span>
+</div>
+<span class="font-label-sm text-[10px] text-slate-400">Param: <code class="text-primary font-bold">cat [GET]</code></span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-300">
+              Reliable predicate inference verified through conditional truth differential. Statistical confidence ratio 99.8%.
+            </p>
+<div class="flex items-center justify-between pt-1 text-xs font-label-sm">
+<span class="text-slate-400 text-[11px]">Level: 2 â€¢ Risk: 2 â€¢ Confirmed</span>
+<button class="text-violet-400 hover:text-violet-300 underline text-[11px]">Inspect Differential Trees â†’</button>
+</div>
+</div>
+<!-- Tamper Script & Vector Sandbox Strip -->
+<div class="bg-surface-container-lowest p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">vpn_key</span>
+<span class="font-label-sm text-xs text-slate-300">Active Tampers:</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-label-sm text-violet-300 border border-slate-700">space2comment</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-label-sm text-violet-300 border border-slate-700">randomcase</span>
+<button class="text-slate-400 hover:text-slate-200 p-0.5" title="Add Tamper Script">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. BOTTOM RAW HTTP REQUEST / RESPONSE INSPECTION DRAWER -->
+<section class="bg-surface-container-low border border-slate-700/50 rounded-xl overflow-hidden shadow-lg flex flex-col mb-2">
+<!-- Drawer Header & Tab Dock -->
+<div class="bg-surface-container px-3.5 py-2 border-b border-slate-700/50 flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-violet-400 text-base">swap_horiz</span>
+<span class="font-headline-sm text-headline-sm text-slate-100">Packet Inspector</span>
+</div>
+<!-- Sub-tabs -->
+<div class="flex items-center bg-surface-container-lowest rounded p-0.5 border border-slate-800 text-[11px] font-label-sm">
+<button class="px-2.5 py-1 rounded bg-violet-600/30 text-violet-300 font-semibold border border-violet-500/40 flex items-center gap-1">
+<span>Request #342</span>
+<span class="text-[9px] px-1 bg-violet-500 text-on-primary rounded font-bold">ACTIVE</span>
+</button>
+<button class="px-2.5 py-1 text-slate-400 hover:text-slate-200 flex items-center gap-1">
+<span>Response #342</span>
+<span class="text-[9px] text-emerald-400 font-bold">200 OK</span>
+</button>
+<button class="px-2.5 py-1 text-slate-400 hover:text-slate-200">Diff Split View</button>
+</div>
+</div>
+<div class="flex items-center gap-3 text-xs font-label-sm text-slate-400">
+<span>Payload Hash: <code class="text-slate-300">0x8a92f0c1</code></span>
+<span class="text-slate-600">|</span>
+<button class="hover:text-slate-200 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+<span>Send to Request Editor</span>
+</button>
+<button class="text-slate-400 hover:text-slate-200" title="Collapse Drawer">
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Raw Inspection Split Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 bg-[#070b14] text-xs font-label-sm leading-5">
+<!-- Request Window -->
+<div class="p-3.5 overflow-x-auto max-h-48">
+<div class="text-slate-500 text-[11px] mb-1 flex items-center justify-between">
+<span class="font-bold uppercase tracking-wider text-slate-400">HTTP/1.1 Request Payload</span>
+<span>Length: 284 bytes</span>
+</div>
+<pre class="text-slate-300 font-label-sm"><code><span class="text-violet-400 font-bold">GET</span> /listproducts.php?cat=1%20AND%208821=8821%20--%20- HTTP/1.1
+<span class="text-slate-400">Host:</span> testphp.vulnweb.com
+<span class="text-slate-400">User-Agent:</span> SQLPhantom/4.2.0 (Automated Pentest Engine; x86_64)
+<span class="text-slate-400">Accept:</span> text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+<span class="text-slate-400">Accept-Language:</span> en-US,en;q=0.5
+<span class="text-slate-400">Connection:</span> keep-alive
+<span class="text-slate-400">X-Forwarded-For:</span> 127.0.0.1</code></pre>
+</div>
+<!-- Response Window -->
+<div class="p-3.5 overflow-x-auto max-h-48">
+<div class="text-slate-500 text-[11px] mb-1 flex items-center justify-between">
+<span class="font-bold uppercase tracking-wider text-slate-400">HTTP/1.1 Target Response</span>
+<span class="text-emerald-400 font-semibold">Status 200 OK (32ms)</span>
+</div>
+<pre class="text-slate-300 font-label-sm"><code><span class="text-emerald-400 font-bold">HTTP/1.1 200 OK</span>
+<span class="text-slate-400">Server:</span> nginx/1.19.0
+<span class="text-slate-400">Date:</span> Thu, 24 Oct 2024 14:42:20 GMT
+<span class="text-slate-400">Content-Type:</span> text/html; charset=UTF-8
+<span class="text-slate-400">Content-Length:</span> 4821
+
+<span class="text-slate-500">&lt;!-- Body Snapshot --&gt;</span>
+&lt;div class="catalog-title"&gt;Category: Printers &amp; Supplies&lt;/div&gt;
+<span class="bg-violet-950/60 text-violet-300 px-1 rounded">&lt;span class="prod-desc"&gt;Found 12 items matching predicate TRUE&lt;/span&gt;</span></code></pre>
+</div>
+</div>
+</section>
+</main>
+<script>
+    // Lightweight micro-interaction handlers for interactive testing
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle auto-scroll indicator demo
+      const autoScrollPill = document.querySelector('.bg-emerald-400.animate-ping');
+      if (autoScrollPill) {
+        console.log('SQLPhantom Engine Telemetry Stream initialized in high-density mode.');
+      }
+    });
+  </script>
+</body></html>
