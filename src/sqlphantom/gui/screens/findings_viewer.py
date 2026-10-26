@@ -4,6 +4,7 @@ SQLPhantom PySide6 Findings and Evidence triage screen.
 
 from pathlib import Path
 from PySide6.QtWidgets import (
+    QApplication,
     QFrame,
     QHBoxLayout,
     QHeaderView,
@@ -20,18 +21,22 @@ from PySide6.QtWidgets import (
 
 from sqlphantom.domain.enums import ReportFormat
 from sqlphantom.domain.models import Finding
+from sqlphantom.domain.aggregation import aggregate_findings
+from sqlphantom.reporting.remediation import RemediationAssistant
 
 
 class FindingsViewerScreen(QWidget):
     """
     Master-detail triage interface for inspecting confirmed vulnerabilities,
-    technical payloads, extracted evidence, and exporting formal reports.
+    technical payloads, extracted evidence, defensive remediation guidance,
+    and exporting formal reports.
     """
 
     def __init__(self, main_window, parent=None):
         super().__init__(parent)
         self.main_window = main_window
         self._findings_map: dict[str, Finding] = {}
+        self._current_finding: Finding | None = None
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
@@ -86,7 +91,7 @@ class FindingsViewerScreen(QWidget):
         right_frame.setProperty("class", "card-frame")
         right_layout = QVBoxLayout(right_frame)
 
-        self.lbl_detail_title = QLabel("Select a finding to inspect exploitation evidence.")
+        self.lbl_detail_title = QLabel("Select a finding to inspect verification evidence.")
         self.lbl_detail_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #A855F7;")
         self.lbl_detail_param = QLabel("")
         self.lbl_detail_param.setStyleSheet("color: #94A3B8;")
@@ -96,31 +101,76 @@ class FindingsViewerScreen(QWidget):
 
         self.tabs = QTabWidget()
 
-        # Tab 1: Evidence & PoC
-        tab_poc = QWidget()
-        poc_layout = QVBoxLayout(tab_poc)
-        poc_layout.addWidget(QLabel("Synthesized Exploit Payload:"))
+        # Tab 1: Evidence
+        tab_evidence = QWidget()
+        ev_layout = QVBoxLayout(tab_evidence)
+        ev_layout.addWidget(QLabel("Observed Payload Pattern:"))
         self.txt_payload = QPlainTextEdit()
         self.txt_payload.setReadOnly(True)
         self.txt_payload.setMaximumHeight(80)
         self.txt_payload.setStyleSheet("background-color: #050811; color: #FBBF24; font-family: monospace;")
-        poc_layout.addWidget(self.txt_payload)
+        ev_layout.addWidget(self.txt_payload)
 
-        poc_layout.addWidget(QLabel("Raw Technical Evidence / DBMS Error:"))
+        ev_layout.addWidget(QLabel("Raw Technical Evidence / Diagnostic Reflection:"))
         self.txt_evidence = QPlainTextEdit()
         self.txt_evidence.setReadOnly(True)
         self.txt_evidence.setStyleSheet("background-color: #050811; color: #34D399; font-family: monospace;")
-        poc_layout.addWidget(self.txt_evidence)
-        self.tabs.addTab(tab_poc, "Evidence & PoC")
+        ev_layout.addWidget(self.txt_evidence)
+        self.tabs.addTab(tab_evidence, "Evidence & Telemetry")
 
-        # Tab 2: Remediation
-        tab_rem = QWidget()
-        rem_layout = QVBoxLayout(tab_rem)
-        self.txt_remediation = QPlainTextEdit()
-        self.txt_remediation.setReadOnly(True)
-        self.txt_remediation.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: sans-serif;")
-        rem_layout.addWidget(self.txt_remediation)
-        self.tabs.addTab(tab_rem, "Remediation Guidance")
+        # Tab 2: Defensive Remediation Assistant
+        tab_remediation = QWidget()
+        rem_layout = QVBoxLayout(tab_remediation)
+        
+        cwe_info = RemediationAssistant.get_cwe_details()
+        lbl_cwe = QLabel(f"<b>CWE:</b> {cwe_info['cwe_id']} - {cwe_info['cwe_title']} | <b>OWASP:</b> {cwe_info['owasp_top_10']}")
+        lbl_cwe.setStyleSheet("color: #CBD5E1; font-size: 12px;")
+        rem_layout.addWidget(lbl_cwe)
+
+        self.rem_subtabs = QTabWidget()
+        
+        self.txt_rem_py_sqlalchemy = QPlainTextEdit()
+        self.txt_rem_py_sqlalchemy.setReadOnly(True)
+        self.txt_rem_py_sqlalchemy.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: monospace;")
+        self.rem_subtabs.addTab(self.txt_rem_py_sqlalchemy, "Python (SQLAlchemy)")
+
+        self.txt_rem_py_psycopg = QPlainTextEdit()
+        self.txt_rem_py_psycopg.setReadOnly(True)
+        self.txt_rem_py_psycopg.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: monospace;")
+        self.rem_subtabs.addTab(self.txt_rem_py_psycopg, "Python (psycopg)")
+
+        self.txt_rem_node = QPlainTextEdit()
+        self.txt_rem_node.setReadOnly(True)
+        self.txt_rem_node.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: monospace;")
+        self.rem_subtabs.addTab(self.txt_rem_node, "Node.js (pg)")
+
+        self.txt_rem_java = QPlainTextEdit()
+        self.txt_rem_java.setReadOnly(True)
+        self.txt_rem_java.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: monospace;")
+        self.rem_subtabs.addTab(self.txt_rem_java, "Java (JDBC)")
+
+        self.txt_rem_php = QPlainTextEdit()
+        self.txt_rem_php.setReadOnly(True)
+        self.txt_rem_php.setStyleSheet("background-color: #050811; color: #E2E8F0; font-family: monospace;")
+        self.rem_subtabs.addTab(self.txt_rem_php, "PHP (PDO)")
+
+        rem_layout.addWidget(self.rem_subtabs)
+
+        btn_copy_rem = QPushButton("Copy Code Snippet")
+        btn_copy_rem.setProperty("class", "secondary")
+        btn_copy_rem.clicked.connect(self._copy_current_remediation)
+        rem_layout.addWidget(btn_copy_rem)
+
+        self.tabs.addTab(tab_remediation, "Defensive Remediation")
+
+        # Tab 3: Aggregated Findings Summary
+        tab_agg = QWidget()
+        agg_layout = QVBoxLayout(tab_agg)
+        self.txt_aggregation = QPlainTextEdit()
+        self.txt_aggregation.setReadOnly(True)
+        self.txt_aggregation.setStyleSheet("background-color: #050811; color: #38BDF8; font-family: monospace;")
+        agg_layout.addWidget(self.txt_aggregation)
+        self.tabs.addTab(tab_agg, "Aggregated Summary")
 
         right_layout.addWidget(self.tabs)
         splitter.addWidget(right_frame)
@@ -165,10 +215,23 @@ class FindingsViewerScreen(QWidget):
             self.table.setItem(row, 2, item_param)
             self.table.setItem(row, 3, item_title)
 
+        # Update Aggregated View
         if findings:
+            agg_list = aggregate_findings(findings)
+            agg_text_lines = ["=== Consolidated Target Vulnerability Surface ===", ""]
+            for a in agg_list:
+                agg_text_lines.append(f"• Target Endpoint: {a.target_url}")
+                agg_text_lines.append(f"  Vulnerable Param: {a.parameter}")
+                agg_text_lines.append(f"  Severity: [{a.highest_severity}]")
+                agg_text_lines.append(f"  Detected Techniques: {a.technique_summary}")
+                agg_text_lines.append(f"  Underlying Finding Count: {len(a.findings)}")
+                agg_text_lines.append("")
+            self.txt_aggregation.setPlainText("\n".join(agg_text_lines))
+
             self.display_finding(findings[0])
-            self.lbl_status.setText(f"Showing {len(findings)} confirmed security finding(s).")
+            self.lbl_status.setText(f"Showing {len(findings)} confirmed security finding(s) across {len(agg_list)} parameter(s).")
         else:
+            self.txt_aggregation.setPlainText("No findings available to aggregate.")
             self.lbl_status.setText("No findings yet. Run an assessment to populate vulnerabilities.")
 
     def _on_row_selected(self) -> None:
@@ -183,15 +246,28 @@ class FindingsViewerScreen(QWidget):
                 self.display_finding(self._findings_map[finding_id])
 
     def display_finding(self, finding: Finding) -> None:
+        self._current_finding = finding
         self.lbl_detail_title.setText(f"[{finding.severity}] {finding.title}")
         self.lbl_detail_param.setText(
             f"Endpoint: {finding.url}  |  Parameter: {finding.parameter}  |  Confidence: {finding.confidence}"
         )
         self.txt_payload.setPlainText(finding.payload)
         self.txt_evidence.setPlainText(finding.evidence or "Payload yielded differential response.")
-        self.txt_remediation.setPlainText(
-            finding.remediation or "Ensure rigorous parameterization and disable detailed database error reflection."
-        )
+
+        # Populate defensive snippets
+        snippets = RemediationAssistant.generate_snippets(finding)
+        self.txt_rem_py_sqlalchemy.setPlainText(snippets.get("python_sqlalchemy", ""))
+        self.txt_rem_py_psycopg.setPlainText(snippets.get("python_psycopg", ""))
+        self.txt_rem_node.setPlainText(snippets.get("nodejs_pg", ""))
+        self.txt_rem_java.setPlainText(snippets.get("java_jdbc", ""))
+        self.txt_rem_php.setPlainText(snippets.get("php_pdo", ""))
+
+    def _copy_current_remediation(self) -> None:
+        current_widget = self.rem_subtabs.currentWidget()
+        if isinstance(current_widget, QPlainTextEdit):
+            text = current_widget.toPlainText()
+            QApplication.clipboard().setText(text)
+            self.lbl_status.setText("Remediation code snippet copied to clipboard!")
 
     def export_report(self, fmt: ReportFormat) -> None:
         findings = list(self._findings_map.values())

@@ -39,3 +39,4 @@ htmlcov/
 
 # Packaging
 *.spec
+!packaging/*.spec

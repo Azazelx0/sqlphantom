@@ -9,12 +9,15 @@ from textual.widgets import Button, DataTable, Label, Static
 
 from sqlphantom.domain.enums import ReportFormat
 from sqlphantom.domain.models import Finding
+from sqlphantom.domain.aggregation import aggregate_findings
+from sqlphantom.reporting.remediation import RemediationAssistant
 
 
 class FindingsScreen(Static):
     """
     Master-detail triage interface for inspecting confirmed vulnerabilities,
-    technical payloads, extracted evidence, and exporting formal reports.
+    technical payloads, extracted evidence, defensive code guidance,
+    and exporting formal reports.
     """
 
     def __init__(self, id: str | None = None):
@@ -42,7 +45,7 @@ class FindingsScreen(Static):
 
                 # Right Detail View (60% width)
                 with Vertical(classes="detail-pane", id="findings-detail-pane"):
-                    yield Label("Select a finding to inspect exploitation evidence.", id="detail-title", classes="card-title")
+                    yield Label("Select a finding to inspect verification evidence.", id="detail-title", classes="card-title")
                     yield Label("", id="detail-severity")
                     yield Label("", id="detail-param")
                     yield Label("", id="detail-payload")
@@ -84,9 +87,10 @@ class FindingsScreen(Static):
             )
 
         if findings:
+            agg = aggregate_findings(findings)
             self.display_finding(findings[0])
             self.query_one("#findings-status-label", Label).update(
-                f"Showing {len(findings)} confirmed security finding(s)."
+                f"Showing {len(findings)} confirmed finding(s) across {len(agg)} vulnerable parameter(s)."
             )
         else:
             self.query_one("#findings-status-label", Label).update(
@@ -100,6 +104,9 @@ class FindingsScreen(Static):
 
     def display_finding(self, finding: Finding) -> None:
         self._selected_finding_id = finding.id
+        cwe = RemediationAssistant.get_cwe_details()
+        snippets = RemediationAssistant.generate_snippets(finding)
+
         self.query_one("#detail-title", Label).update(f"[bold #A855F7]{finding.title}[/bold #A855F7]")
         self.query_one("#detail-severity", Label).update(
             f"[bold]Severity:[/bold] [red]{finding.severity}[/red] (Confidence: {finding.confidence})"
@@ -108,13 +115,19 @@ class FindingsScreen(Static):
             f"[bold]Target Endpoint:[/bold] {finding.url} (Param: [cyan]{finding.parameter}[/cyan])"
         )
         self.query_one("#detail-payload", Label).update(
-            f"[bold]Exploit Payload:[/bold]\n[yellow]{finding.payload}[/yellow]"
+            f"[bold]Observed Payload Pattern:[/bold]\n[yellow]{finding.payload}[/yellow]"
         )
         self.query_one("#detail-evidence", Label).update(
-            f"[bold]Technical Evidence:[/bold]\n[green]{finding.evidence or 'Payload triggered differential response.'}[/green]"
+            f"[bold]Technical Evidence / Reflection:[/bold]\n[green]{finding.evidence or 'Payload triggered differential response.'}[/green]"
         )
+        
+        # Display CWE and Defensive Python snippet preview
+        preview_code = snippets.get("python_sqlalchemy", "").strip().split("\n")[:6]
+        preview_str = "\n".join(preview_code)
         self.query_one("#detail-remediation", Label).update(
-            f"[bold]Remediation Guidance:[/bold]\n{finding.remediation or 'Apply parameterized SQL queries.'}"
+            f"[bold]Defensive Remediation ({cwe['cwe_id']}):[/bold]\n"
+            f"[cyan]{cwe['owasp_asvs']}[/cyan]\n"
+            f"[dim]{preview_str}[/dim]"
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
