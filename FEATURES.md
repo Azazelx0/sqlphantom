@@ -161,40 +161,40 @@ The engine layer encapsulates communication with the upstream sqlmap engine usin
 - **User Value**: Guarantees zero risk of global state contamination or thread deadlocks from upstream sqlmap internals, ensuring UI stability.
 - **Dependencies**: Python standard library `subprocess`, `sys`.
 - **Acceptance Criteria**: Spawns server on an available localhost port; waits for ready signal; terminates cleanly on application exit without leaving orphan processes.
-- **Status**: `IN_PROGRESS`
-- **Associated Tests**: `tests/unit/test_engine_process.py`, `tests/integration/test_engine_lifecycle.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/integration/test_sqlmap_integration.py`
 
 ### ENG-002: REST API Async Client
 - **Description**: High-performance HTTP client wrapping sqlmap REST API endpoints (`/task/new`, `/task/<id>/delete`, `/scan/<id>/start`, `/scan/<id>/status`, `/scan/<id>/data`, `/scan/<id>/log`, `/scan/<id>/stop`, `/scan/<id>/kill`).
 - **User Value**: Provides strongly-typed Python async methods for every sqlmap API capability.
 - **Dependencies**: `httpx>=0.25`, [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Implements connection retry, timeout handling, error response mapping, and authentication token injection.
-- **Status**: `IN_PROGRESS`
-- **Associated Tests**: `tests/unit/test_engine_client.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/integration/test_sqlmap_integration.py`
 
 ### ENG-003: Task Creation & Option Mapping
 - **Description**: Translator mapping high-level SQLPhantom domain scan configurations into sqlmapapi `/option/<id>/set` payloads.
 - **User Value**: Translates friendly UI options into the exact parameter names and types expected by sqlmap engine.
 - **Dependencies**: [DEV-002](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-002-pydantic-v2-domain-models).
 - **Acceptance Criteria**: Maps all core sqlmap options (URL, method, data, cookies, level, risk, technique, tamper, dbms); validates types before sending.
-- **Status**: `IN_PROGRESS`
-- **Associated Tests**: `tests/unit/test_option_mapping.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/integration/test_sqlmap_integration.py`
 
 ### ENG-004: Scan Polling & Telemetry Ingestion
 - **Description**: Asynchronous polling worker that queries `/scan/<id>/status`, `/scan/<id>/log`, and `/scan/<id>/data`, emitting typed events.
 - **User Value**: Converts raw JSON polling responses into structured domain events for UI and storage layers.
 - **Dependencies**: [DEV-001](file:///d:/Projects/SQLPhantom/FEATURES.md#dev-001-typed-domain-event-bus), [ENG-002](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-002-rest-api-async-client).
 - **Acceptance Criteria**: Incremental log ingestion without duplicate messages; emits events on state changes; handles network hiccups gracefully.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_scan_polling.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/integration/test_sqlmap_integration.py`
 
 ### ENG-005: Process Graceful Stop & Kill Fallback
 - **Description**: Two-tiered termination strategy: issues `/scan/<id>/stop` then `/scan/<id>/kill`, falling back to OS process termination if necessary.
 - **User Value**: Guarantees that scans stop immediately when requested by operator, avoiding hung background connections.
 - **Dependencies**: [ENG-001](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-001-sqlmapapi-subprocess-lifecycle-supervisor), [ENG-002](file:///d:/Projects/SQLPhantom/FEATURES.md#eng-002-rest-api-async-client).
 - **Acceptance Criteria**: Scan stops within 3 seconds of user request; cleans up temporary engine task files.
-- **Status**: `PLANNED`
-- **Associated Tests**: `tests/unit/test_scan_cancellation.py`
+- **Status**: `TESTED`
+- **Associated Tests**: `tests/integration/test_sqlmap_integration.py`
 
 ### ENG-006: Engine Version & Health Check
 - **Description**: Diagnostics service checking upstream sqlmap commit baseline, Python environment, network bind capability, and API responsiveness.

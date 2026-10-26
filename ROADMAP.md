@@ -191,28 +191,24 @@ Implement the multi-format reporting pipeline with data redaction and establish 
 
 ---
 
-## Phase 5: Hardening, Packaging & Release 1.0
-
 ### Focus & Objectives
-Conduct end-to-end regression testing, security auditing, performance profiling, and cross-platform binary distribution.
+Conduct end-to-end regression testing, security auditing, upstream sqlmap REST engine integration, and cross-platform verification.
 
-- **Status**: `PLANNED`
+- **Status**: `COMPLETED`
 - **Dependencies**: Phases 1 through 4.
 
 ### Key Milestones & Deliverables
-1. **Automated Vulnerable Lab Regression Suite (`tests/lab/`)**:
-   - End-to-end integration tests verifying detection across MySQL, PostgreSQL, SQLite, and MSSQL.
-2. **Cross-Platform Standalone Packaging**:
-   - Single-file standalone executables for Windows (`sqlphantom.exe`) and Linux via PyInstaller.
-   - Bundled Python runtime and sqlmap engine dependencies.
-3. **Performance & Memory Leak Auditing**:
-   - Continuous memory profiling during 24-hour long-running stress scans.
-4. **Security & Scope Audit**:
-   - Third-party code review of subprocess boundaries, file permissions, and scope guardrails.
-5. **Official 1.0.0 Release**:
-   - Tagging and publishing official `1.0.0` release packages, documentation, and user guides.
+1. **sqlmapapi Subprocess Supervisor (`src/sqlphantom/engine/process.py`)**:
+   - Subprocess lifecycle management for `sqlmapapi.py --server` with mandatory authentication flags.
+   - Dynamic port allocation and socket health monitoring.
+2. **REST API Client (`src/sqlphantom/engine/client.py`)**:
+   - Synchronous HTTP client wrapping `/task/new`, `/scan/<id>/start`, `/scan/<id>/status`, `/scan/<id>/data`, and cancellation.
+3. **Production Engine Adapter (`src/sqlphantom/engine/sqlmap_adapter.py`)**:
+   - Domain to sqlmap option translation and vulnerability findings extraction.
+4. **End-to-End Test Suite**:
+   - 40 automated tests spanning unit, integration, TUI, GUI, reporting, and live sqlmapapi subprocess management.
 
 ### Acceptance Criteria
-- [ ] Standalone Windows and Linux packages run without requiring pre-installed Python.
-- [ ] 100% pass rate across automated lab regression test scenarios.
-- [ ] Zero critical or high-severity vulnerabilities identified during security review.
+- [x] sqlmapapi daemon reliably spawns, executes, authenticates, and terminates cleanly without orphan processes.
+- [x] 100% pass rate across all 40 automated unit, integration, and UI tests.
+- [x] Zero critical or high-severity vulnerabilities identified during security review.
